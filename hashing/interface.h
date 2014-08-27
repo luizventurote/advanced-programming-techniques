@@ -14,7 +14,7 @@ int MenuOption() {
 	printf(" 1) Linear Hashing \n");
 	printf(" 2) Double Hashing \n");
 	printf(" 3) Closed Hashing \n");
-	printf(" 4) Opened Hashing \n");
+	printf(" 4) Open Hashing \n");
 	printf(" 0) Exit \n");
 	printf("\n Select hashing option: ");
 	scanf("%d", &opt);

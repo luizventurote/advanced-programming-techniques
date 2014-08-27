@@ -6,6 +6,7 @@
 #include "linear_hashing.h"
 #include "double_hashing.h"
 #include "closed_hashing.h"
+#include "open_hashing.h"
 
 /**
  * Main
@@ -18,8 +19,7 @@ void main() {
 	while(run==1) {
 		
 		// Menu option
-		//menu_opt = MenuOption();
-		menu_opt = 3;	
+		menu_opt = MenuOption();
 		
 		switch(menu_opt) {
 			case 1:
@@ -35,6 +35,11 @@ void main() {
 			case 3:
 				displayHeader("Closed Hashing");
 				ClosedHashing("students.txt");
+				displayFooter();
+				break;
+			case 4:
+				displayHeader("Open Hashing");
+				OpenHashing("students.txt");
 				displayFooter();
 				break;
 			case 0:
