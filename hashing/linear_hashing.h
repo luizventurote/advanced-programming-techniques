@@ -13,15 +13,27 @@ int LinearHs_AddHashTable(struct student *hash_table, struct student std) {
 	// Get hash code
 	int code = HashFunction(HASHTBL_SIZE, std.cod);
 	
+	// Start code
+	int startCode = code;
+	
 	while(sign == 1) {
 		
 		// Check empty index
 		if(hash_table[code].cod == 0) {
+
 			// Add in hash table
 			hash_table[code] = std;
+			
+			// Debug
+			printf(" StartHScode=%d - HScode=%d - ItemCod=%d - ItemName=%s\n", startCode, code, std.cod, std.name);
+			
 			sign=0;
+			
 		} else {
 			code++;
+			if(code == (HASHTBL_SIZE-1)) {
+				code=0;
+			}
 		}
 		
 	}
@@ -44,10 +56,15 @@ int LinearHs_DeleteHashTable(struct student *hash_table, struct student std) {
 	// Get hash code
 	int code = HashFunction(HASHTBL_SIZE, std.cod);
 	
+	// Start code
+	int startCode = code;
+	
 	while(sign == 1) {
 		
 		// Check empty index
 		if(hash_table[code].cod == std.cod) {
+			printf(" Deleted: StartHScode=%d - HScode=%d - ItemCod=%d - ItemName=%s\n", startCode, code, std.cod, std.name);
+			
 			hash_table[code] = getEmptyStudent();			
 			sign=0;
 		} else {
@@ -120,11 +137,19 @@ void linearHashing(char * file_name) {
 	HashTable hash_table;
 	startHashTable(&hash_table);
 	
+	// Debug
+	printf("Hash function: ItemCod mod table_size(%d)\n\n", HASHTBL_SIZE);
+	
 	// Add
-	LinearHs_AddHashTable(&hash_table, *students[5]);
-	LinearHs_AddHashTable(&hash_table, *students[1]);
-	LinearHs_AddHashTable(&hash_table, *students[8]);
-	LinearHs_AddHashTable(&hash_table, *students[10]);
+	for (i = 0; i != HASH_ITEN_QTY; i++) {
+	    LinearHs_AddHashTable(&hash_table, *students[i]);
+	}
+	
+	// Colision Test
+	Student *colision_student = malloc(sizeof(Student));
+	strcpy(colision_student->name, "Ibrahimovic");
+	colision_student->cod = 1000;
+	LinearHs_AddHashTable(&hash_table, *colision_student);
 	
 	// Remove
 	LinearHs_DeleteHashTable(&hash_table, *students[8]);
@@ -133,7 +158,7 @@ void linearHashing(char * file_name) {
 	printHashTable(&hash_table);
 	
 	// Get item from hash table
-	Student std = LinearHs_getHashTableItem(&hash_table, 6);
+	Student std = LinearHs_getHashTableItem(&hash_table, 1028);
 	printf(" Student selected: %s - %d\n\n\n", std.name, std.cod);
 	
 }

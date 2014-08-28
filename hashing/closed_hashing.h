@@ -1,3 +1,6 @@
+// Hash table init size
+static int closed_hstable_size = 10;
+
 // Node struct
 typedef struct NodeType {
 	struct student student;
@@ -107,7 +110,7 @@ int startClosedHashTable(Node **hash_table) {
 	int i=0;
 	
 	// Reset all positions
-	for(i=0; i<HASHTBL_SIZE; i++) {
+	for(i=0; i<closed_hstable_size; i++) {
 	    hash_table[i] = initList();
 	}
 	
@@ -125,10 +128,12 @@ int startClosedHashTable(Node **hash_table) {
 int ClosedHs_AddHashTable(Node **hash_table, Student std) {
 	
 	// Get hash code
-	int code = HashFunction(HASHTBL_SIZE, std.cod);
+	int code = HashFunction(closed_hstable_size, std.cod);
 	
 	// Adds the element in the list
 	hash_table[code] = insertNode(hash_table[code], std);
+	
+	printf(" HScode=%d - ItemCod=%d - ItemName=%s\n", code, std.cod, std.name);
 
 	return 1;
 }
@@ -143,9 +148,12 @@ int ClosedHs_AddHashTable(Node **hash_table, Student std) {
 int ClosedHs_DeleteHashTable(Node **hash_table, Student std) {
 	
 	// Get hash code
-	int code = HashFunction(HASHTBL_SIZE, std.cod);
+	int code = HashFunction(closed_hstable_size, std.cod);
 	
 	hash_table[code] = removeNode(hash_table[code], std);
+	
+	// Debug
+	printf(" Deleted: HScode=%d - ItemCod=%d - ItemName=%s\n", code, std.cod, std.name);
 	
 	return 1;
 	
@@ -161,7 +169,7 @@ int ClosedHs_DeleteHashTable(Node **hash_table, Student std) {
 Student ClosedHs_GetHashTableItem(Node **hash_table, int cod) {
 	
 	// Get hash code
-	int code = HashFunction(HASHTBL_SIZE, cod);
+	int code = HashFunction(closed_hstable_size, cod);
 	
 	// New student
 	Student std = hash_table[code]->student;
@@ -187,7 +195,7 @@ void ClosedHs_printHashTable(Node **hash_table) {
 	
 	Node *sub_node;
 	
-	for(i=0; i<HASHTBL_SIZE; i++) {
+	for(i=0; i<closed_hstable_size; i++) {
 		if(hash_table[i] != NULL) {
 			printf(" \n %d | %d - %s \n", i, hash_table[i]->student.cod, hash_table[i]->student.name);
 			printf(" --------------------------------------------------");
@@ -200,7 +208,7 @@ void ClosedHs_printHashTable(Node **hash_table) {
 		}
 	}
 	
-	printf("\n\n");
+	printf("\n\n\n");
 	
 }
 
@@ -222,25 +230,13 @@ void ClosedHashing(char * file_name) {
 	loadDataFile(file_name, &*students);
 	
 	// Start hashing table
-	Node **hash_table = (Node *) malloc(HASHTBL_SIZE * sizeof(Node *));
+	Node **hash_table = (Node *) malloc(closed_hstable_size * sizeof(Node *));
 	startClosedHashTable(&*hash_table);
-
-	//Node *hash_table = initList();
 	
 	// Add
-	ClosedHs_AddHashTable(&*hash_table, *students[5]);
-	ClosedHs_AddHashTable(&*hash_table, *students[1]);
-	ClosedHs_AddHashTable(&*hash_table, *students[8]);
-	ClosedHs_AddHashTable(&*hash_table, *students[10]);
-	ClosedHs_AddHashTable(&*hash_table, *students[11]);
-	ClosedHs_AddHashTable(&*hash_table, *students[12]);
-	ClosedHs_AddHashTable(&*hash_table, *students[3]);
-	ClosedHs_AddHashTable(&*hash_table, *students[2]);
-	ClosedHs_AddHashTable(&*hash_table, *students[4]);
-	ClosedHs_AddHashTable(&*hash_table, *students[9]);
-	ClosedHs_AddHashTable(&*hash_table, *students[15]);
-	ClosedHs_AddHashTable(&*hash_table, *students[7]);
-	ClosedHs_AddHashTable(&*hash_table, *students[0]);
+	for (i = 0; i != HASH_ITEN_QTY; i++) {	    
+		ClosedHs_AddHashTable(&*hash_table, *students[i]);
+	}
 	
 	// Remove
 	ClosedHs_DeleteHashTable(&*hash_table, *students[0]);
@@ -250,7 +246,7 @@ void ClosedHashing(char * file_name) {
 	ClosedHs_printHashTable(&*hash_table);
 	
 	// Get item from hash table
-	Student std = ClosedHs_GetHashTableItem(&*hash_table, 5);
+	Student std = ClosedHs_GetHashTableItem(&*hash_table, 1028);
 	printf(" Student selected: %s - %d\n\n\n", std.name, std.cod);
 	
 }

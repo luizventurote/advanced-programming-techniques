@@ -33,7 +33,7 @@ int reHashing(int table_size, int num1, int num2) {
 int DoubleHs_AddHashTable(struct student *hash_table, struct student std) {
 	
 	// Signal to control collisions
-	int sign=1;
+	int sign=1, sing_code2=1;
 	
 	// Get hash code
 	int code = HashFunction(HASHTBL_SIZE, std.cod);
@@ -41,16 +41,33 @@ int DoubleHs_AddHashTable(struct student *hash_table, struct student std) {
 	// Used for the Double Hash
 	int code2=0;
 	
+	// Start code
+	int startCode = code;
+	
 	while(sign == 1) {
 		
 		// Check empty index
 		if(hash_table[code].cod == 0) {
+			
 			// Add in hash table
 			hash_table[code] = std;
+			
+			// Debug
+			printf(" StartHScode=%d - HScode=%d - ItemCod=%d - ItemName=%s\n", startCode, code, std.cod, std.name);
+			
 			sign=0;
+			
 		} else {
-			code2 = HashFunctionDoublue(HASHTBL_SIZE, std.cod);
-			code = reHashing(HASHTBL_SIZE, code, code2);
+			if(sing_code2 == 1) {
+				code2 = HashFunctionDoublue(HASHTBL_SIZE, std.cod);
+				code = reHashing(HASHTBL_SIZE, code, code2);
+				sing_code2=0;
+			} else {
+				code++;
+				if(code == (HASHTBL_SIZE-1)) {
+					code=0;
+				}
+			}
 		}
 		
 	}
@@ -76,11 +93,19 @@ int DoubleHs_DeleteHashTable(struct student *hash_table, struct student std) {
 	// Used for the Double Hash
 	int code2=0;
 	
+	// Start code
+	int startCode = code;
+	
 	while(sign == 1) {
 		
 		// Check empty index
 		if(hash_table[code].cod == std.cod) {
-			hash_table[code] = getEmptyStudent();			
+			
+			hash_table[code] = getEmptyStudent();
+			
+			// Debug
+			printf(" Deleted: StartHScode=%d - HScode=%d - ItemCod=%d - ItemName=%s\n", startCode, code, std.cod, std.name);
+						
 			sign=0;
 		} else {
 			code2 = HashFunctionDoublue(HASHTBL_SIZE, std.cod);
@@ -157,11 +182,23 @@ void DoubleHashing(char * file_name) {
 	HashTable hash_table;
 	startHashTable(&hash_table);
 	
+	printf("Hash function: ItemCod mod table_size(%d)\n\n", HASHTBL_SIZE);
+	
 	// Add
-	DoubleHs_AddHashTable(&hash_table, *students[5]);
-	DoubleHs_AddHashTable(&hash_table, *students[1]);
-	DoubleHs_AddHashTable(&hash_table, *students[8]);
-	DoubleHs_AddHashTable(&hash_table, *students[10]);
+	for (i = 0; i != HASH_ITEN_QTY; i++) {
+	    DoubleHs_AddHashTable(&hash_table, *students[i]);
+	}
+	
+	// Colision Test
+	Student *colision_student = malloc(sizeof(Student));
+	strcpy(colision_student->name, "Ibrahimovic");
+	colision_student->cod = 1000;
+	DoubleHs_AddHashTable(&hash_table, *colision_student);
+	
+	Student *colision_student_2 = malloc(sizeof(Student));
+	strcpy(colision_student_2->name, "Emanuel");
+	colision_student_2->cod = 1000;
+	DoubleHs_AddHashTable(&hash_table, *colision_student_2);
 	
 	// Remove
 	DoubleHs_DeleteHashTable(&hash_table, *students[8]);
@@ -170,7 +207,7 @@ void DoubleHashing(char * file_name) {
 	printHashTable(&hash_table);
 	
 	// Get item from hash table
-	Student std = DoubleHs_GetHashTableItem(&hash_table, 6);
+	Student std = DoubleHs_GetHashTableItem(&hash_table, 1028);
 	printf(" Student selected: %s - %d\n\n\n", std.name, std.cod);
 	
 }

@@ -1,8 +1,8 @@
 // Hash table size
-#define HASHTBL_SIZE 7
+#define HASHTBL_SIZE 511
 
 // Quantity of items of the hash table
-#define HASH_ITEN_QTY 100
+#define HASH_ITEN_QTY 200
 
 // Student struct
 typedef struct student {
