@@ -7,6 +7,13 @@ typedef struct student {
   char 	address[100];
 } Student;
 
+// Node struct
+typedef struct node {
+	struct node* left;
+	Student student;
+	struct node* right;
+} Node;
+
 /**
  * Get a empty student
  * @author Luiz Venturote
