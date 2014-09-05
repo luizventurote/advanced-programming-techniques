@@ -102,3 +102,12 @@ void loadDataFile(char * file_name, Student **std) {
 	fclose(fp);
 	
 }
+
+/**
+ * Initialize a new tree
+ * @author Luiz Venturote
+ * @return void
+ */
+void initTree(Node *tree) {
+	*tree = NULL;
+}
