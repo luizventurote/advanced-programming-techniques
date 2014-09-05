@@ -111,3 +111,12 @@ void loadDataFile(char * file_name, Student **std) {
 void initTree(Node *tree) {
 	*tree = NULL;
 }
+
+/**
+ * Checks if the tree is empty
+ * @author Luiz Venturote
+ * @return int empty tree or not
+ */
+int checkEmptyTree(Node tree) {
+	return (tree == NULL);
+}
