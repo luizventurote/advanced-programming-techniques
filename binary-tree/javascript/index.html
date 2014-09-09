@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Binary Tree - JavaScript</title>
+</head>
+<body>
+
+	<script type="text/javascript" src="binary-tree.js"></script>
+	
+	<script type="text/javascript">
+
+		var tree = new Tree({ 
+			id: 1, 
+			message: "Hello, world!" 
+		});
+
+		tree.add({
+			id: 20,
+			message: "Luiz"
+		});
+
+		console.log(tree.find(1).message);
+		console.log(tree.find(20).message);
+
+
+	</script>
+
+</body>
+</html>
