@@ -33,7 +33,28 @@ int checkTreeEmpty(int *T) {
  * @param int value Node value
  * @return int Yes or No
  */
-int addNode(int *T, int value) {}
+int addNode(int *T, int value) {
+
+	// Check if the tree is empty
+	if(T[0] == 0) {
+		T[0] = value;
+	}
+}
+
+/**
+ * Display tree
+ * @author Luiz Venturote
+ * @param int *T Tree
+ * @return void
+ */
+void printTree(int *T) {
+	
+	int i=0;
+	
+	for(i=0; i<TREE_SIZE; i++) {
+		printf("- %d\n", T[i]);
+	}
+}
 
 /**
  * Initialize sequential binary tree representation
@@ -42,15 +63,12 @@ int addNode(int *T, int value) {}
  */
 void BinaryTreeSeq() {
 	
-	int i=0;
-	
 	// Initializes a new tree
 	int tree[TREE_SIZE];
 	initTree(tree);
 	
-	for(i=0; i<TREE_SIZE; i++) {
-		printf("- %d\n", tree[i]);
-	}
+	// Print Tree
+	printTree(tree);
 	
 	// Checks if the tree is empty
 	printf("%d\n", checkTreeEmpty(tree) );
