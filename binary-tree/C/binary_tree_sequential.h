@@ -1,4 +1,5 @@
-#define TREE_SIZE 20
+static int tree_size = 20;
+static int tree_nodes = 0;
 
 /**
  * Initialize a new tree
@@ -8,7 +9,7 @@
  */
 void initTree(int *T) {
 
-	int tree_size = TREE_SIZE, i=0;
+	int tree_size = tree_size, i=0;
 	
 	for(i=0; i<tree_size; i++) {
 		T[i] = 0;	
@@ -35,6 +36,9 @@ int checkTreeEmpty(int *T) {
  */
 int addNode(int *T, int value) {
 
+	// Increments a node
+	tree_nodes++;
+
 	// Check if the tree is empty
 	if(T[0] == 0) {
 		T[0] = value;
@@ -51,8 +55,8 @@ void printTree(int *T) {
 	
 	int i=0;
 	
-	for(i=0; i<TREE_SIZE; i++) {
-		printf("- %d\n", T[i]);
+	for(i=0; i<tree_size; i++) {
+		printf("\\- %d\n", T[i]);
 	}
 }
 
@@ -64,7 +68,7 @@ void printTree(int *T) {
 void BinaryTreeSeq() {
 	
 	// Initializes a new tree
-	int tree[TREE_SIZE];
+	int tree[tree_size];
 	initTree(tree);
 	
 	// Print Tree
@@ -73,4 +77,9 @@ void BinaryTreeSeq() {
 	// Checks if the tree is empty
 	printf("%d\n", checkTreeEmpty(tree) );
 	
+	// Add node
+	addNode(tree, 10);
+	
+	// Print Tree
+	printTree(tree);
 }
