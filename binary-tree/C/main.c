@@ -26,7 +26,7 @@ void main() {
 				displayFooter();
 				break;
 			case 2:
-				displayHeader("Arvore Binaria com alocacao Sequencial");
+				displayHeader("Arvore Binaria com alocacao Dinamica");
 				BinaryTreeDyn();
 				displayFooter();
 				break;
