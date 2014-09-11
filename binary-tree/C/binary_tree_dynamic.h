@@ -1,7 +1,7 @@
 // Node struct
 typedef struct node {
 	struct node* left;
-	Student student;
+	int value;
 	struct node* right;
 } Node;
 
@@ -33,6 +33,14 @@ int Dyn_checkEmptyTree(Node *tree) {
  * @return int Yes or no
  */
 int Dyn_addNode(Node *tree, int value) {
+	
+	// Checks if node is root
+	if( Dyn_checkEmptyTree(tree) == 0 ) {
+		tree->value = value;
+		printf("ok");
+		return 1;
+	}
+
 	return 0;
 }
 
