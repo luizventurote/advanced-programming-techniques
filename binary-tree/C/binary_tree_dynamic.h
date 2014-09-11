@@ -1,3 +1,5 @@
+static int binary_tree_size = 100;
+
 // Node struct
 typedef struct node {
 	struct node* left;
@@ -54,9 +56,10 @@ void BinaryTreeDyn() {
 	printf("Initialize dynamic binary tree representation!\n");
 	
 	// Tree
-	Node *tree = (Node*) malloc( sizeof(Node) );
+	Node *tree = (Node*) malloc( binary_tree_size * sizeof(Node) );
 	
 	// Init
+	printf("A binary tree is empty? %d \n", Dyn_initTree(tree));
 	Dyn_initTree(tree);
 	
 	// Check if the tree is empty
