@@ -3,6 +3,7 @@
 #include <string.h>
 #include "interface.h"
 #include "binary_tree_sequential.h"
+#include "binary_tree_dynamic.h"
 
 /**
  * Main
@@ -25,8 +26,8 @@ void main() {
 				displayFooter();
 				break;
 			case 2:
-				displayHeader("Arvore Binaria com alocacao Sequencial");
-				//BinaryTreeDin("students.txt");
+				displayHeader("Arvore Binaria com alocacao Dinamica");
+				BinaryTreeDyn();
 				displayFooter();
 				break;
 			case 0:

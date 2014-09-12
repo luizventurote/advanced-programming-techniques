@@ -7,13 +7,6 @@ typedef struct student {
   char 	address[100];
 } Student;
 
-// Node struct
-typedef struct node {
-	struct node* left;
-	Student student;
-	struct node* right;
-} Node;
-
 /**
  * Get a empty student
  * @author Luiz Venturote
@@ -101,22 +94,4 @@ void loadDataFile(char * file_name, Student **std) {
 	// Close file
 	fclose(fp);
 	
-}
-
-/**
- * Initialize a new tree
- * @author Luiz Venturote
- * @return void
- */
-void initTree(Node *tree) {
-	*tree = NULL;
-}
-
-/**
- * Checks if the tree is empty
- * @author Luiz Venturote
- * @return int empty tree or not
- */
-int checkEmptyTree(Node tree) {
-	return (tree == NULL);
 }
