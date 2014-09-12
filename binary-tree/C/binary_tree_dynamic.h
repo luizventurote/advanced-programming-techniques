@@ -59,7 +59,7 @@ void BinaryTreeDyn() {
 	Node *tree = (Node*) malloc( binary_tree_size * sizeof(Node) );
 	
 	// Init
-	printf("A binary tree is empty? %d \n", Dyn_initTree(tree));
+	printf("A binary tree is empty? %d \n", Dyn_checkEmptyTree(tree));
 	Dyn_initTree(tree);
 	
 	// Check if the tree is empty
