@@ -44,27 +44,36 @@ int addNode(int *T, int value) {
 	// Check if the tree is empty
 	if(T[0] == 0) {
 		T[0] = value;
-	}
-	
-	for(i=0; i<tree_size; i++) {
+		printf("\nFirst element!\n");
+	} else {
+		printf("\nelement!\n");
+		for(i=0; i<tree_size; i++) {
 		
-		int left = (T[i]*2)+1;
-		int right = (T[i]*2)+2;
-	
-		// Left
-		if( left == 0 && left<T[i] ) {
-			T[left] = value;	
-		} else {
+			int left = (i*2)+1;
+			int right = (i*2)+2;
 			
-			// Right
-			if( right == 0 ) {
-				T[right] = value;	
+			printf("\n Left: %d - Right: %d\n", left, right);
+		
+			// Left
+			if( T[left] == 0 && value<T[i] ) {
+				T[left] = value;
+				printf("\nelement left!\n");
+				return 1;	
+			} else {
+				
+				// Right
+				if( T[right] == 0 && value>T[i] ) {
+					T[right] = value;
+					printf("\nelement right!\n");
+					return 1;
+				}
+				
 			}
 			
 		}
-		
 	}
 	
+	return 0;
 }
 
 /**
@@ -97,13 +106,18 @@ void BinaryTreeSeq() {
 	printTree(tree);
 	
 	// Checks if the tree is empty
-	printf("%d\n", checkTreeEmpty(tree) );
+	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
 	
 	// Add node
 	addNode(tree, 10);
 	addNode(tree, 5);
+	addNode(tree, 15);
+	addNode(tree, 7);
 	
 	// Print Tree
 	printTree(tree);
+	
+	// Checks if the tree is empty
+	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
 	
 }
