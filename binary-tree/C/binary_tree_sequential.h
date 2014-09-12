@@ -9,9 +9,9 @@ static int tree_nodes = 0;
  */
 void initTree(int *T) {
 
-	int tree_size = tree_size, i=0;
+	int size = tree_size, i=0;
 	
-	for(i=0; i<tree_size; i++) {
+	for(i=0; i<size; i++) {
 		T[i] = 0;	
 	}
 	
@@ -36,6 +36,8 @@ int checkTreeEmpty(int *T) {
  */
 int addNode(int *T, int value) {
 
+	int i=0;
+	
 	// Increments a node
 	tree_nodes++;
 
@@ -43,6 +45,26 @@ int addNode(int *T, int value) {
 	if(T[0] == 0) {
 		T[0] = value;
 	}
+	
+	for(i=0; i<tree_size; i++) {
+		
+		int left = (T[i]*2)+1;
+		int right = (T[i]*2)+2;
+	
+		// Left
+		if( left == 0 && left<T[i] ) {
+			T[left] = value;	
+		} else {
+			
+			// Right
+			if( right == 0 ) {
+				T[right] = value;	
+			}
+			
+		}
+		
+	}
+	
 }
 
 /**
@@ -79,7 +101,9 @@ void BinaryTreeSeq() {
 	
 	// Add node
 	addNode(tree, 10);
+	addNode(tree, 5);
 	
 	// Print Tree
 	printTree(tree);
+	
 }
