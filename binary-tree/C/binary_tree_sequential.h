@@ -9,6 +9,7 @@ typedef struct node_stc {
 	int right;
 	int right_pos;
 	int level;
+	int father_pos;
 } Node_Stc;
 
 /**
@@ -19,12 +20,13 @@ typedef struct node_stc {
  */
 void initTree(Node_Stc *T) {
 
-	int size = tree_size, i=0, aux=0, next_val=0, level=0;
+	int size = tree_size, i=0, j=0, aux=0, next_val=0, level=0;
 	
 	for(i=0; i<size; i++) {
 		
 		// Node value
 		T[i].value = 0;	
+		T[i].father_pos = 0;
 		
 		// Lenf and Right position calc
 		T[i].left_pos = (i*2)+1;
@@ -56,6 +58,52 @@ void initTree(Node_Stc *T) {
 		}
 	}
 	
+	T[0].value = 10;
+	T[1].value = 5;
+	T[2].value = 15;
+	T[3].value = 1;
+	T[4].value = 7;
+	T[4].value = 12;
+	T[4].value = 20;
+	
+	// Father posistion
+	for(i=0; i<size; i++) {
+		
+		// First position
+		if(i == 0) {
+		} else {
+			
+			for(j=0; j<size; j++) {
+				
+				if(T[j].level == (T[i].level-1) ) {
+					
+					if(T[ T[j].left_pos ].value == T[i].value) {
+						printf("\n Left: i: %d - j: %d - T[i].value:%d - T[j].value:%d - T[i].level: %d - T[j].level: %d \n", i, j, T[i].value, T[j].value, T[i].level, T[j].level);
+					}
+					
+					if(T[ T[j].right_pos ].value == T[i].value) {
+						printf("\n Right: i: %d - j: %d - T[i].value:%d - T[j].value:%d - T[i].level: %d - T[j].level: %d \n", i, j, T[i].value, T[j].value, T[i].level, T[j].level);
+					}
+					
+					printf("\n ----- \n");
+					
+				}
+				
+			}
+			
+			printf("\n +=====+ \n");
+		}
+		
+//		printf(" Node: %d - Father: %d - Level: %d\n\n", T[i].value, T[T[i].father_pos].value, T[i].level);
+			
+	}
+	
+	
+		
+	
+	
+	
+	
 }
 
 /**
@@ -75,43 +123,43 @@ int checkTreeEmpty(Node_Stc *T) {
  * @param int value Node value
  * @return int Yes or No
  */
-int addNode(int *T, int value) {
+int addNode(Node_Stc *T, int value) {
 
-	int i=0;
-	
-	// Increments a node
-	tree_nodes++;
-
-	// Check if the tree is empty
-	if(T[0] == 0) {
-		T[0] = value;
-		printf("\n Node add = %d \n\n", T[0]);
-	} else {
-		for(i=0; i<tree_size; i++) {
-		
-			int left = (i*2)+1;
-			int right = (i*2)+2;
-			
-			printf("\n T[i]-Node: %d - Left: %d - Right: %d - Value: %d - T[left]: %d - T[right]: %d\n", T[i], left, right, value, T[left], T[right]);
-		
-			// Left
-			if( T[left] == 0 && value<T[i] ) {
-				T[left] = value;
-				printf("\n Node add left of the %d = %d \n\n", T[i], T[left]);
-				return 1;	
-			} else {
-				
-				// Right
-				if( T[right] == 0 && value>T[i] ) {
-					T[right] = value;
-					printf("\n Node add right of the %d = %d \n\n", T[i], T[right]);
-					return 1;
-				}
-				
-			}
-			
-		}
-	}
+//	int i=0;
+//	
+//	// Increments a node
+//	tree_nodes++;
+//
+//	// Check if the tree is empty
+//	if(T[0].value == 0) {
+//		T[0].value = value;
+//		printf("\n Node add = %d \n\n", T[0].value);
+//	} else {
+//		for(i=0; i<tree_size; i++) {
+//		
+//			int left = (i*2)+1;
+//			int right = (i*2)+2;
+//			
+//			printf("\n T[i]-Node: %d - Left: %d - Right: %d - Value: %d - T[left]: %d - T[right]: %d\n", T[i], left, right, value, T[left], T[right]);
+//		
+//			// Left
+//			if( T[left] == 0 && value<T[i] ) {
+//				T[left] = value;
+//				printf("\n Node add left of the %d = %d \n\n", T[i], T[left]);
+//				return 1;	
+//			} else {
+//				
+//				// Right
+//				if( T[right] == 0 && value>T[i] ) {
+//					T[right] = value;
+//					printf("\n Node add right of the %d = %d \n\n", T[i], T[right]);
+//					return 1;
+//				}
+//				
+//			}
+//			
+//		}
+//	}
 	
 	return 0;
 }
@@ -166,7 +214,7 @@ void BinaryTreeSeq() {
 	// Checks if the tree is empty
 	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
 	
-//	// Add node
+	// Add node
 //	addNode(tree, 10);
 //	addNode(tree, 5);
 //	addNode(tree, 15);
@@ -175,12 +223,12 @@ void BinaryTreeSeq() {
 //	addNode(tree, 25);
 //	addNode(tree, 3);
 //	
-//	// Print Tree
-//	printf("\n=====================\n");
-//	printTree(tree);
-//	printf("\n=====================\n");
-//	
-//	// Checks if the tree is empty
-//	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
+	// Print Tree
+	printf("\n=====================\n");
+	printTree(tree);
+	printf("\n=====================\n");
+	
+	// Checks if the tree is empty
+	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
 	
 }
