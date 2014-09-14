@@ -64,8 +64,8 @@ void initTree(Node_Stc *T) {
  * @param int *T Tree
  * @return int Yes or No
  */
-int checkTreeEmpty(int *T) {
-	return (*T == 0);
+int checkTreeEmpty(Node_Stc *T) {
+	return (T[0].value == 0);
 }
 
 /**
@@ -163,9 +163,9 @@ void BinaryTreeSeq() {
 	printTree(tree);
 	printf("\n=====================\n");
 	
-//	// Checks if the tree is empty
-//	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
-//	
+	// Checks if the tree is empty
+	printf("\nThe tree is empty? %d\n\n", checkTreeEmpty(tree) );
+	
 //	// Add node
 //	addNode(tree, 10);
 //	addNode(tree, 5);
