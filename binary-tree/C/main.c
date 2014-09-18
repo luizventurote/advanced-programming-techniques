@@ -18,7 +18,7 @@ void main() {
 		
 		// Menu option
 		//menu_opt = MenuOption();
-		menu_opt = 1;
+		menu_opt = 2;
 		
 		switch(menu_opt) {
 			case 1:
