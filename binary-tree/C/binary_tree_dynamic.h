@@ -79,7 +79,7 @@ void Dyn_addNode(Node **tree, int value){
  * @param int value Node value
  * @return void
  */
-Node* searchNode(Node *tree, int value){
+Node* searchNode(Node *tree, int value) {
    if (tree == NULL) {
        return NULL;      
    } else if (tree->value == value){
@@ -92,33 +92,71 @@ Node* searchNode(Node *tree, int value){
 }
 
 /**
- * Get node max depth
+ * Function returning the max between two numbers
  * @author Luiz Venturote
- * @param Node **node Node
- * @param int depth Depth
- * @return int Depth
+ * @param int num1 Number
+ * @param int num2 Number
+ * @return int Result
  */
-int getNodeMaxDepth(Node *node, int depth) {
-	int ld, rd;
-	if (node==NULL) { return depth-1; }
-	ld = getNodeMaxDepth(node->left, depth+1);
-	rd = getNodeMaxDepth(node->right, depth+1);
-	return (ld<rd) ? rd : ld;
+int max(int num1, int num2) {
+	
+   int result;
+ 
+   if (num1 > num2)
+      result = num1;
+   else
+      result = num2;
+ 
+   return result; 
 }
 
-int heightNode(Node *tree)
-{
-	if(!tree)
+/**
+ * Node height
+ * @author Luiz Venturote
+ * @param Node **tree Tree or node
+ * @return int Node height
+ */
+int heightNode(Node *tree) {
+
+	if(tree == NULL) 
 		return 0;
 	else
-	{
-		int left  = heightNode(tree->left);
-		int right = heightNode(tree->right);
-		if(left >= right)
-			return left + 1;
-		else
-			return right + 1;
+		return max(heightNode(tree->left), heightNode(tree->right)) +1;
+		
+}
+
+/**
+ * Lvel height
+ * @author Luiz Venturote
+ * @param Node **tree Tree or node
+ * @param int value Node value
+ * @return int Node height
+ */
+int levelNode(Node *tree, int value) {
+	
+	if(tree == NULL) {
+    	return 0;
+    	
+	} else {
+		
+		int level = -1;
+		
+		if(tree->value == value) {
+    		return level+1;   
+   	
+		} else if(tree->value > value) {
+	    	level = levelNode(tree->left, value);
+	   	
+		} else {
+			level = levelNode(tree->right, value);       
+	   	} 
+	   	
+	   	return level +1;   
+		
 	}
+	
+	return 0;   
+   
 }
 
 /**
@@ -190,18 +228,22 @@ void BinaryTreeDyn() {
 	Dyn_addNode(&tree, 9);
 	Dyn_addNode(&tree, 12);
 	Dyn_addNode(&tree, 16);
+	Dyn_addNode(&tree, 160);
+	Dyn_addNode(&tree, 23);
+	Dyn_addNode(&tree, 28);
+	Dyn_addNode(&tree, 13);
 	
 	// Print the tree
 	Dyn_printTree(tree);
 	
 	// Search node
-	Node *node_found = searchNode(tree, 8);
+	Node *node_found = searchNode(tree, 20);
 	printf("\n\n Node found: %d\n", node_found->value);
 	
 	// Node Height
-	printf(" Node found height: %d \n\n", heightNode(node_found) );
+	printf(" Node found height: %d \n", heightNode(node_found) );
 	
-	// Tree Depth
-	printf(" Tree max depth: %d \n\n", getNodeMaxDepth( tree, 1) );
+	// Node Lvel
+	printf(" Node found level: %d \n\n", levelNode(tree, node_found->value) );
 	
 }
