@@ -3,7 +3,7 @@ typedef struct node {
 	int value;				// Node content
 	struct node *left;		// Feft child
 	struct node *right;		// Right child
-	struct node *pai;   	// Ancestral node
+	struct node *parent;   	// Parent node
 } Node;
 
 /**
@@ -32,7 +32,11 @@ void Dyn_insertNode(Node **tree, Node *new_node){
 			
 			// Insert in left
 			if( (*tree)->left == NULL ){
-				(*tree)->left = new_node;                 
+				(*tree)->left = new_node;  
+				
+				// Set node parent
+				(*tree)->left->parent = (*tree);    
+				           
 			} else {
 				Dyn_insertNode( &(*tree)->left, new_node);       
 			}
@@ -41,7 +45,11 @@ void Dyn_insertNode(Node **tree, Node *new_node){
 			
 			// Insert in right
 			if ((*tree)->right == NULL){
-				(*tree)->right = new_node;               
+				(*tree)->right = new_node;    
+				
+				// Set node parent
+				(*tree)->right->parent = (*tree);   
+				           
 			} else {
 				Dyn_insertNode( &(*tree)->right, new_node);       
 			}
@@ -49,7 +57,11 @@ void Dyn_insertNode(Node **tree, Node *new_node){
 		}  
 		
 	} else {
-		(*tree) = new_node;   
+		(*tree) = new_node;
+		
+		// Set node parent
+		(*tree)->parent = (Node *)malloc(sizeof(Node));
+		(*tree)->parent->value = 0;
 	} 
 	
 }
@@ -69,6 +81,7 @@ void Dyn_addNode(Node **tree, int value){
 	new_node->value = value;
 	new_node->left = NULL;
 	new_node->right = NULL;
+	new_node->parent = NULL;
 	
 	// Insert the node in the tree
 	Dyn_insertNode(&(*tree), new_node);   
@@ -102,6 +115,12 @@ Node* Dyn_searchNode(Node *tree, int value) {
  * @param Node **tree Tree or node
  * @return int Node height
  */
+int Dyn_getNodeHeight(Node *tree) {
+
+	return Dyn_heightNode(tree) - 1;
+		
+}
+
 int Dyn_heightNode(Node *tree) {
 
 	if(tree == NULL) 
@@ -311,11 +330,14 @@ void BinaryTreeDyn() {
 	Dyn_displayTree(tree);
 	
 	// Search node
-	Node *node_found = Dyn_searchNode(tree, 10);
+	Node *node_found = Dyn_searchNode(tree, 8);
 	printf("\n\n Node found: %d\n", node_found->value);
 	
+	// Node parent
+	printf(" Node parent: %d\n", node_found->parent->value);
+	
 	// Node Height
-	printf(" Node found height: %d \n", Dyn_heightNode(node_found) );
+	printf(" Node found height: %d \n", Dyn_getNodeHeight(node_found) );
 	
 	// Node Lvel
 	printf(" Node found level: %d \n\n", Dyn_levelNode(tree, node_found->value) );
