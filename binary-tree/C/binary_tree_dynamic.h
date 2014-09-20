@@ -304,6 +304,60 @@ void Dyn_printDescendingOrder(Node *tree) {
 
 
 /**
+ * Number of nodes
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return int qty
+ */
+int Dyn_NodeQty(Node *tree) {
+	
+	if(tree == NULL) {
+		return 0;
+	}
+	
+	int nL = Dyn_NodeQty(tree->left); 
+	int nR = Dyn_NodeQty(tree->right); 
+	
+	return (nL + nR + 1); 
+}
+
+int Dyn_getNodeQty(Node *tree) {
+	return Dyn_NodeQty(tree) - 1;
+}
+
+
+/**
+ * The tree is balanced?
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return int Yes or No
+ */
+int Dyn_isBalanced(Node *tree) {
+	
+	int lh; // for height of left subtree
+	int rh; // for height of right subtree
+ 
+	// If tree is empty then return true
+	if(tree == NULL)
+	return 1; 
+ 
+	// Get the height of left and right sub trees
+	lh = Dyn_NodeQty(tree->left);
+	rh = Dyn_NodeQty(tree->right);
+   
+	//printf("\n Node: %d - lh: %d - rh: %d\n", tree->value, lh, rh);
+ 
+	if( abs(lh-rh) <= 1 &&
+		Dyn_isBalanced(tree->left) &&
+		Dyn_isBalanced(tree->right))
+		return 1;
+ 
+	/* If we reach here then tree is not height-balanced */
+	return 0;
+}
+
+
+/**
  * Initialize dynamic binary tree representation
  * @author Luiz Venturote
  * @return void
@@ -326,21 +380,29 @@ void BinaryTreeDyn() {
 	Dyn_addNode(&tree, 18);
 	Dyn_addNode(&tree, 11);
 	Dyn_addNode(&tree, 3);
+	Dyn_addNode(&tree, 23);
+	Dyn_addNode(&tree, 33);
 	
 	Dyn_displayTree(tree);
 	
 	// Search node
-	Node *node_found = Dyn_searchNode(tree, 8);
-	printf("\n\n Node found: %d\n", node_found->value);
+	Node *node_found = Dyn_searchNode(tree, 10);
+	printf("\n\n\n\n Node: %d\n", node_found->value);
 	
 	// Node parent
-	printf(" Node parent: %d\n", node_found->parent->value);
+	printf(" Parent: %d\n", node_found->parent->value);
 	
 	// Node Height
-	printf(" Node found height: %d \n", Dyn_getNodeHeight(node_found) );
+	printf(" Height: %d \n", Dyn_getNodeHeight(node_found) );
 	
 	// Node Lvel
-	printf(" Node found level: %d \n\n", Dyn_levelNode(tree, node_found->value) );
+	printf(" Level: %d \n", Dyn_levelNode(tree, node_found->value) );
+	
+	// Node qty
+	printf(" Node qty: %d \n\n", Dyn_getNodeQty(node_found) );
+	
+	// Node qty
+	printf(" Is perfectly balanced: %d \n\n", Dyn_isBalanced(node_found) );
 	
 	// Print tree - Preorder 
 	printf(" Preorder:");
