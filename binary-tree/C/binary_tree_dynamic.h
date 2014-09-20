@@ -160,7 +160,7 @@ void Dyn_displayTree(Node *tree){
 void Dyn_printTree(Node *tree, int line, int column, int rate){
      if (tree != NULL){
        if ((line < 25) && (column <= 80) && (column > 0)){    
-           gotoxy(column,line);
+           Dyn_gotoxy(column,line);
            printf("<%d>",tree->value);
            rate = rate /2;
            Dyn_printTree(tree->left,line+2,column-rate, rate);
@@ -176,10 +176,79 @@ void Dyn_printTree(Node *tree, int line, int column, int rate){
  * @param int line
  * @return void
  */
-void gotoxy(int column, int linha) { 
+void Dyn_gotoxy(int column, int linha) { 
 	COORD point; 
 	point.X = column; point.Y = linha; 
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point); 
+}
+
+/**
+ * Print tree - Preorder
+ * @author Luiz Venturote
+ * @param int column
+ * @param int line
+ * @return void
+ */
+void Dyn_printPreorder(Node *tree) {
+	
+	if( tree != NULL ) {
+		printf("  %d  ", tree->value);
+	}
+	
+	if( tree->left != NULL) {
+		Dyn_printPreorder(tree->left);
+	}
+	
+	if( tree->right != NULL) {
+		Dyn_printPreorder(tree->right);
+	}
+	
+}
+
+/**
+ * Print tree - Inorder
+ * @author Luiz Venturote
+ * @param int column
+ * @param int line
+ * @return void
+ */
+void Dyn_printInorder(Node *tree) {
+	
+	if( tree->left != NULL) {
+		Dyn_printInorder(tree->left);
+	}
+	
+	if( tree != NULL ) {
+		printf("  %d  ", tree->value);
+	}
+	
+	if( tree->right != NULL) {
+		Dyn_printInorder(tree->right);
+	}
+	
+}
+
+/**
+ * Print tree - Postorder
+ * @author Luiz Venturote
+ * @param int column
+ * @param int line
+ * @return void
+ */
+void Dyn_printPostorder(Node *tree) {
+	
+	if( tree->left != NULL) {
+		Dyn_printPostorder(tree->left);
+	}
+	
+	if( tree->right != NULL) {
+		Dyn_printPostorder(tree->right);
+	}
+	
+	if( tree != NULL ) {
+		printf("  %d  ", tree->value);
+	}
+	
 }
 
 /**
@@ -217,5 +286,25 @@ void BinaryTreeDyn() {
 	
 	// Node Lvel
 	printf(" Node found level: %d \n\n", Dyn_levelNode(tree, node_found->value) );
+	
+	// Print tree - Preorder 
+	printf(" Preorder:");
+	Dyn_printPreorder(tree);
+	printf("\n\n");
+	
+	// Print tree - Inorder 
+	printf(" Inorder:");
+	Dyn_printInorder(tree);
+	printf("\n\n");
+	
+	// Print tree - Postorder 
+	printf(" Postorder:");
+	Dyn_printPostorder(tree);
+	printf("\n\n");
+	
+	
+	
+	
+	
 	
 }
