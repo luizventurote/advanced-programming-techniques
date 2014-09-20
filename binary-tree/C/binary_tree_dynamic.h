@@ -252,6 +252,26 @@ void Dyn_printPostorder(Node *tree) {
 }
 
 /**
+ * Print tree - Descending Order
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return void
+ */
+void Dyn_printDescendingOrder(Node *tree) {
+	
+	if(tree == NULL) {
+		return;
+	}
+    
+    Dyn_printDescendingOrder(tree->right);
+    
+    printf("  %d  ", tree->value);
+    
+    Dyn_printDescendingOrder(tree->left);
+	
+}
+
+/**
  * Initialize dynamic binary tree representation
  * @author Luiz Venturote
  * @return void
@@ -300,6 +320,11 @@ void BinaryTreeDyn() {
 	// Print tree - Postorder 
 	printf(" Postorder:");
 	Dyn_printPostorder(tree);
+	printf("\n\n");
+	
+	// Print tree - Descending Order 
+	printf(" Descending Order:");
+	Dyn_printDescendingOrder(tree);
 	printf("\n\n");
 	
 	
