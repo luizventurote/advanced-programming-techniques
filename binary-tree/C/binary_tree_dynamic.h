@@ -356,6 +356,22 @@ int Dyn_isBalanced(Node *tree) {
 	return 0;
 }
 
+// strictly binary tree
+int Dyn_is2Tree(Node *tree) {
+
+	if(tree) {
+		
+        if( ( (!tree->right)&&(tree->left) ) || ( (tree->right)&&(!tree->left) ) ) {
+        	return 0;	
+        } else {
+	    	return Dyn_is2Tree(tree->left) && Dyn_is2Tree(tree->right);
+		}
+		
+    }
+    
+    return 1;
+	
+}
 
 /**
  * Initialize dynamic binary tree representation
@@ -371,22 +387,17 @@ void BinaryTreeDyn() {
 	Dyn_initTree(&tree);
 	
 	// Adds nodes
-	Dyn_addNode(&tree, 10);
-	Dyn_addNode(&tree, 5);
-	Dyn_addNode(&tree, 20);
+	Dyn_addNode(&tree, 2);
 	Dyn_addNode(&tree, 1);
-	Dyn_addNode(&tree, 8);
-	Dyn_addNode(&tree, 15);
-	Dyn_addNode(&tree, 18);
-	Dyn_addNode(&tree, 11);
+	Dyn_addNode(&tree, 4);
 	Dyn_addNode(&tree, 3);
-	Dyn_addNode(&tree, 23);
-	Dyn_addNode(&tree, 33);
+	Dyn_addNode(&tree, 5);
+	Dyn_addNode(&tree, 6);
 	
 	Dyn_displayTree(tree);
 	
 	// Search node
-	Node *node_found = Dyn_searchNode(tree, 10);
+	Node *node_found = Dyn_searchNode(tree, 2);
 	printf("\n\n\n\n Node: %d\n", node_found->value);
 	
 	// Node parent
@@ -401,8 +412,11 @@ void BinaryTreeDyn() {
 	// Node qty
 	printf(" Node qty: %d \n\n", Dyn_getNodeQty(node_found) );
 	
-	// Node qty
-	printf(" Is perfectly balanced: %d \n\n", Dyn_isBalanced(node_found) );
+	// Is perfectly balanced
+	printf(" Arvore perfeitamente balanceada: %d \n\n", Dyn_isBalanced(node_found) );
+	
+	// Is strictly
+	printf(" Arvore Estritamente binaria: %d \n\n", Dyn_is2Tree(node_found) );
 	
 	// Print tree - Preorder 
 	printf(" Preorder:");
