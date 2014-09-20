@@ -79,36 +79,18 @@ void Dyn_addNode(Node **tree, int value){
  * @param int value Node value
  * @return void
  */
-Node* searchNode(Node *tree, int value) {
+Node* Dyn_searchNode(Node *tree, int value) {
    if (tree == NULL) {
        return NULL;      
    } else if (tree->value == value){
        return tree;   
    } else if (tree->value > value){
-       return (searchNode(tree->left, value));
+       return (Dyn_searchNode(tree->left, value));
    } else {
-       return (searchNode(tree->right, value));       
+       return (Dyn_searchNode(tree->right, value));       
    } 
 }
 
-/**
- * Function returning the max between two numbers
- * @author Luiz Venturote
- * @param int num1 Number
- * @param int num2 Number
- * @return int Result
- */
-int max(int num1, int num2) {
-	
-   int result;
- 
-   if (num1 > num2)
-      result = num1;
-   else
-      result = num2;
- 
-   return result; 
-}
 
 /**
  * Node height
@@ -116,12 +98,12 @@ int max(int num1, int num2) {
  * @param Node **tree Tree or node
  * @return int Node height
  */
-int heightNode(Node *tree) {
+int Dyn_heightNode(Node *tree) {
 
 	if(tree == NULL) 
 		return 0;
 	else
-		return max(heightNode(tree->left), heightNode(tree->right)) +1;
+		return max(Dyn_heightNode(tree->left), Dyn_heightNode(tree->right)) +1;
 		
 }
 
@@ -132,7 +114,7 @@ int heightNode(Node *tree) {
  * @param int value Node value
  * @return int Node height
  */
-int levelNode(Node *tree, int value) {
+int Dyn_levelNode(Node *tree, int value) {
 	
 	if(tree == NULL) {
     	return 0;
@@ -145,10 +127,10 @@ int levelNode(Node *tree, int value) {
     		return level+1;   
    	
 		} else if(tree->value > value) {
-	    	level = levelNode(tree->left, value);
+	    	level = Dyn_levelNode(tree->left, value);
 	   	
 		} else {
-			level = levelNode(tree->right, value);       
+			level = Dyn_levelNode(tree->right, value);       
 	   	} 
 	   	
 	   	return level +1;   
@@ -165,41 +147,39 @@ int levelNode(Node *tree, int value) {
  * @param Node **tree Binary Tree
  * @return void
  */
-#define pow2(n) (1 << (n))
-void Dyn_printTree(Node *root) {
-	char fmt[9];
-	Node **row1, **row2, **rowTemp;
-	int rows, row, col;
-	
-	if (root==NULL) { return; }
+void Dyn_displayTree(Node *tree){
+     Dyn_printTree(tree,2,40,40);     
+}
 
-	rows = getNodeMaxDepth(root, 1);
-	row1 = malloc(sizeof(Node*) * pow2(rows));
-	row2 = malloc(sizeof(Node*) * pow2(rows));
-	row1[0] = root;
-	for(row=0; row<rows; row++) {
-		int col2 = 0, cols = pow2(row);
-		sprintf(fmt,"%%%dc", pow2(rows-(row+1)));
-		for(col=0; col<cols; col++) {
-			Node *node = row1[col];
-			if (node!=NULL) {
-				printf(" %d ", node->value);
-				row2[col2++] = node->left;
-				row2[col2++] = node->right;
-			} else {
-				printf(fmt, ' ');
-				row2[col2++] = NULL;
-				row2[col2++] = NULL;
-			}
-			if (col==0) { sprintf(fmt,"%%%dc", pow2(rows-(row+0))); }
-		}
-		printf("\n");
-		rowTemp = row1;
-		row1=row2;
-		row2=rowTemp;
-	}
-	free(row1);
-	free(row2);
+/**
+ * Print tree
+ * @author Luiz Venturote
+ * @param Node **tree Binary Tree
+ * @return void
+ */
+void Dyn_printTree(Node *tree, int line, int column, int rate){
+     if (tree != NULL){
+       if ((line < 25) && (column <= 80) && (column > 0)){    
+           gotoxy(column,line);
+           printf("<%d>",tree->value);
+           rate = rate /2;
+           Dyn_printTree(tree->left,line+2,column-rate, rate);
+           Dyn_printTree(tree->right, line+2,column+rate, rate);      
+        }
+     }    
+}
+
+/**
+ * Gotoxy
+ * @author Luiz Venturote
+ * @param int column
+ * @param int line
+ * @return void
+ */
+void gotoxy(int column, int linha) { 
+	COORD point; 
+	point.X = column; point.Y = linha; 
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point); 
 }
 
 /**
@@ -225,25 +205,17 @@ void BinaryTreeDyn() {
 	Dyn_addNode(&tree, 18);
 	Dyn_addNode(&tree, 11);
 	Dyn_addNode(&tree, 3);
-	Dyn_addNode(&tree, 9);
-	Dyn_addNode(&tree, 12);
-	Dyn_addNode(&tree, 16);
-	Dyn_addNode(&tree, 160);
-	Dyn_addNode(&tree, 23);
-	Dyn_addNode(&tree, 28);
-	Dyn_addNode(&tree, 13);
 	
-	// Print the tree
-	Dyn_printTree(tree);
+	Dyn_displayTree(tree);
 	
 	// Search node
-	Node *node_found = searchNode(tree, 20);
+	Node *node_found = Dyn_searchNode(tree, 20);
 	printf("\n\n Node found: %d\n", node_found->value);
 	
 	// Node Height
-	printf(" Node found height: %d \n", heightNode(node_found) );
+	printf(" Node found height: %d \n", Dyn_heightNode(node_found) );
 	
 	// Node Lvel
-	printf(" Node found level: %d \n\n", levelNode(tree, node_found->value) );
+	printf(" Node found level: %d \n\n", Dyn_levelNode(tree, node_found->value) );
 	
 }

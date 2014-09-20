@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h> 
+#include <windows.h>
 #include "interface.h"
 #include "binary_tree_sequential.h"
 #include "binary_tree_dynamic.h"
