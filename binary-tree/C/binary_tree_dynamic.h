@@ -1,8 +1,9 @@
 // Node struct
 typedef struct node {
-	struct node* left;
-	int value;
-	struct node* right;
+	int value;				// Node content
+	struct node *left;		// Feft child
+	struct node *right;		// Right child
+	struct node *pai;   	// Ancestral node
 } Node;
 
 /**
@@ -14,7 +15,8 @@ typedef struct node {
 void Dyn_initTree(Node **tree) {
 	*tree = NULL;
 }
-
+ 
+ 
 /**
  * Insert a new node in the tree
  * @author Luiz Venturote
@@ -52,6 +54,7 @@ void Dyn_insertNode(Node **tree, Node *new_node){
 	
 }
 
+
 /**
  * Add a new node in the tree
  * @author Luiz Venturote
@@ -66,11 +69,12 @@ void Dyn_addNode(Node **tree, int value){
 	new_node->value = value;
 	new_node->left = NULL;
 	new_node->right = NULL;
-   
+	
 	// Insert the node in the tree
 	Dyn_insertNode(&(*tree), new_node);   
 	  
 }
+
 
 /**
  * Add a new node in the tree
@@ -107,6 +111,7 @@ int Dyn_heightNode(Node *tree) {
 		
 }
 
+
 /**
  * Lvel height
  * @author Luiz Venturote
@@ -141,6 +146,7 @@ int Dyn_levelNode(Node *tree, int value) {
    
 }
 
+
 /**
  * Display the tree
  * @author Luiz Venturote
@@ -150,6 +156,7 @@ int Dyn_levelNode(Node *tree, int value) {
 void Dyn_displayTree(Node *tree){
      Dyn_printTree(tree,2,40,40);     
 }
+
 
 /**
  * Print tree
@@ -169,6 +176,7 @@ void Dyn_printTree(Node *tree, int line, int column, int rate){
      }    
 }
 
+
 /**
  * Gotoxy
  * @author Luiz Venturote
@@ -181,6 +189,7 @@ void Dyn_gotoxy(int column, int linha) {
 	point.X = column; point.Y = linha; 
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point); 
 }
+
 
 /**
  * Print tree - Preorder
@@ -205,6 +214,7 @@ void Dyn_printPreorder(Node *tree) {
 	
 }
 
+
 /**
  * Print tree - Inorder
  * @author Luiz Venturote
@@ -227,6 +237,7 @@ void Dyn_printInorder(Node *tree) {
 	}
 	
 }
+
 
 /**
  * Print tree - Postorder
@@ -251,6 +262,7 @@ void Dyn_printPostorder(Node *tree) {
 	
 }
 
+
 /**
  * Print tree - Descending Order
  * @author Luiz Venturote
@@ -270,6 +282,7 @@ void Dyn_printDescendingOrder(Node *tree) {
     Dyn_printDescendingOrder(tree->left);
 	
 }
+
 
 /**
  * Initialize dynamic binary tree representation
@@ -298,7 +311,7 @@ void BinaryTreeDyn() {
 	Dyn_displayTree(tree);
 	
 	// Search node
-	Node *node_found = Dyn_searchNode(tree, 20);
+	Node *node_found = Dyn_searchNode(tree, 10);
 	printf("\n\n Node found: %d\n", node_found->value);
 	
 	// Node Height
@@ -326,10 +339,5 @@ void BinaryTreeDyn() {
 	printf(" Descending Order:");
 	Dyn_printDescendingOrder(tree);
 	printf("\n\n");
-	
-	
-	
-	
-	
 	
 }
