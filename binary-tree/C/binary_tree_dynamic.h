@@ -3,8 +3,8 @@ typedef struct node {
 	int value;				// Node content
 	struct node *left;		// Feft child
 	struct node *right;		// Right child
-	struct node *parent;   	// Parent node
 } Node;
+
 
 /**
  * Initialize a new tree
@@ -16,7 +16,86 @@ void Dyn_initTree(Node **tree) {
 	*tree = NULL;
 }
  
+
+/**
+ * Single rotate with left
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return Node*
+ */
+Node * singleRotateWithLeft(Node *tree) {
+	
+    Node *tree_aux;
  
+ 	// Swap
+    tree_aux = tree->left;
+    tree->left = tree_aux->right;
+    tree_aux->right = tree;
+	
+	return tree_aux;
+}
+
+
+/**
+ * Single rotate with right
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return Node*
+ */
+Node * singleRotateWithRight(Node *tree) {
+	
+    Node *tree_aux;
+ 
+ 	// Swap
+    tree_aux = tree->right;
+    if(tree_aux!=NULL)
+    tree->right = tree_aux->left;
+    tree_aux->left = tree;
+    
+
+	return tree_aux;
+	
+}
+
+
+/**
+ * Double rotate with left
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return Node*
+ */
+Node * doubleRotateWithLeft( Node *tree ) {
+	
+    // Rotate with right
+    tree->left = singleRotateWithRight( tree->left );
+ 
+    // Rotate with left
+    return singleRotateWithLeft( tree );
+
+	return tree;
+
+}
+
+
+/**
+ * Single rotate with right
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return Node*
+ */
+Node * doubleRotateWithRight( Node *tree ) {
+	
+    // Rotate with right
+    tree->right = singleRotateWithLeft( tree->right );
+ 
+    // Rotate with left
+    return singleRotateWithRight( tree );
+
+	return tree;
+
+}
+ 
+
 /**
  * Insert a new node in the tree
  * @author Luiz Venturote
@@ -27,41 +106,54 @@ void Dyn_initTree(Node **tree) {
 void Dyn_insertNode(Node **tree, Node *new_node){
 
 	if( (*tree) != NULL ) {
-		
+
 		if ( (*tree)->value > new_node->value ) {
-			
+							  
 			// Insert in left
 			if( (*tree)->left == NULL ){
-				(*tree)->left = new_node;  
-				
-				// Set node parent
-				(*tree)->left->parent = (*tree);    
-				           
+				  
+				(*tree)->left = new_node;  				
+				                
 			} else {
-				Dyn_insertNode( &(*tree)->left, new_node);       
+				Dyn_insertNode( &(*tree)->left, new_node); 
+				
+				if( Dyn_isBalanced( (*tree) ) == 0) {
+					
+					if( new_node->value < (*tree)->left->value ) {
+						(*tree) = singleRotateWithLeft( (*tree) );
+					} else {
+		                 (*tree) = doubleRotateWithLeft( (*tree) );
+					}
+		            	
+				}   
 			}
-			        
+			 
 		} else {
 			
 			// Insert in right
 			if ((*tree)->right == NULL){
-				(*tree)->right = new_node;    
 				
-				// Set node parent
-				(*tree)->right->parent = (*tree);   
-				           
+				(*tree)->right = new_node;  
+				        
 			} else {
-				Dyn_insertNode( &(*tree)->right, new_node);       
+				Dyn_insertNode( &(*tree)->right, new_node);   
+				
+				if( Dyn_isBalanced( (*tree) ) == 0) {
+					
+					if( new_node->value > (*tree)->right->value ) {
+						(*tree) = singleRotateWithRight( (*tree) );
+					} else {
+		                 (*tree) = doubleRotateWithRight( (*tree) );
+					}
+				} 
 			}
 			
 		}  
 		
+		printf("\n");
+		
 	} else {
 		(*tree) = new_node;
-		
-		// Set node parent
-		(*tree)->parent = (Node *)malloc(sizeof(Node));
-		(*tree)->parent->value = 0;
 	} 
 	
 }
@@ -81,7 +173,6 @@ void Dyn_addNode(Node **tree, int value){
 	new_node->value = value;
 	new_node->left = NULL;
 	new_node->right = NULL;
-	new_node->parent = NULL;
 	
 	// Insert the node in the tree
 	Dyn_insertNode(&(*tree), new_node);   
@@ -339,24 +430,54 @@ int Dyn_isBalanced(Node *tree) {
  
 	// If tree is empty then return true
 	if(tree == NULL)
-	return 1; 
+		return 1; 
  
 	// Get the height of left and right sub trees
-	lh = Dyn_NodeQty(tree->left);
-	rh = Dyn_NodeQty(tree->right);
+	lh = Dyn_heightNode(tree->left);
+	rh = Dyn_heightNode(tree->right);
    
 	//printf("\n Node: %d - lh: %d - rh: %d\n", tree->value, lh, rh);
  
-	if( abs(lh-rh) <= 1 &&
-		Dyn_isBalanced(tree->left) &&
-		Dyn_isBalanced(tree->right))
+	if( abs(lh-rh) <= 1 && Dyn_isBalanced(tree->left) && Dyn_isBalanced(tree->right))
 		return 1;
  
 	/* If we reach here then tree is not height-balanced */
 	return 0;
 }
 
-// strictly binary tree
+
+/**
+ * The tree is perfect balanced?
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return int Yes or No
+ */
+int Dyn_isPerfectBalanced(Node *tree) {
+	
+	int lnq; // for qty of the nodes of left bubtree
+	int rnq; // for qty of the nodes of right subtree
+ 
+	// If tree is empty then return true
+	if(tree == NULL)
+		return 1; 
+ 
+	// Get the node qty of left and right sub trees
+	lnq = Dyn_NodeQty(tree->left);
+	rnq = Dyn_NodeQty(tree->right);
+ 
+	if( abs(lnq-rnq) <= 1 && Dyn_isBalanced(tree->left) && Dyn_isBalanced(tree->right))
+		return 1;
+ 
+	return 0;
+}
+
+
+/**
+ * strictly binary tree
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return int Yes or No
+ */
 int Dyn_is2Tree(Node *tree) {
 
 	if(tree) {
@@ -373,6 +494,7 @@ int Dyn_is2Tree(Node *tree) {
 	
 }
 
+
 /**
  * Initialize dynamic binary tree representation
  * @author Luiz Venturote
@@ -387,21 +509,19 @@ void BinaryTreeDyn() {
 	Dyn_initTree(&tree);
 	
 	// Adds nodes
-	Dyn_addNode(&tree, 2);
-	Dyn_addNode(&tree, 1);
-	Dyn_addNode(&tree, 4);
-	Dyn_addNode(&tree, 3);
+	Dyn_addNode(&tree, 10);
 	Dyn_addNode(&tree, 5);
+	Dyn_addNode(&tree, 8);
+	Dyn_addNode(&tree, 4);
 	Dyn_addNode(&tree, 6);
+	Dyn_addNode(&tree, 7);
+	Dyn_addNode(&tree, 3);
 	
 	Dyn_displayTree(tree);
 	
 	// Search node
-	Node *node_found = Dyn_searchNode(tree, 2);
+	Node *node_found = Dyn_searchNode(tree, tree->value);
 	printf("\n\n\n\n Node: %d\n", node_found->value);
-	
-	// Node parent
-	printf(" Parent: %d\n", node_found->parent->value);
 	
 	// Node Height
 	printf(" Height: %d \n", Dyn_getNodeHeight(node_found) );
@@ -413,7 +533,7 @@ void BinaryTreeDyn() {
 	printf(" Node qty: %d \n\n", Dyn_getNodeQty(node_found) );
 	
 	// Is perfectly balanced
-	printf(" Arvore perfeitamente balanceada: %d \n\n", Dyn_isBalanced(node_found) );
+	printf(" Arvore perfeitamente balanceada: %d \n\n", Dyn_isPerfectBalanced(node_found) );
 	
 	// Is strictly
 	printf(" Arvore Estritamente binaria: %d \n\n", Dyn_is2Tree(node_found) );
