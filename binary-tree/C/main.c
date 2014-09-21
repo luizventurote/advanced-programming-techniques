@@ -18,8 +18,7 @@ void main() {
 	while(run==1) {
 		
 		// Menu option
-		//menu_opt = MenuOption();
-		menu_opt = 2;
+		menu_opt = MenuOption();
 		
 		switch(menu_opt) {
 			case 1:
