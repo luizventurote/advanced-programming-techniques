@@ -347,7 +347,7 @@ void Sqt_gotoxy(int column, int linha) {
  */
 void Sqt_printPreorder(Node_Stc *tree) {
 	
-	if( tree != NULL ) {
+	if( tree != NULL && tree->value != -1 ) {
 		printf("  %d  ", tree->value);
 	}
 	
@@ -374,7 +374,7 @@ void Sqt_printInorder(Node_Stc *tree) {
 		Sqt_printInorder(tree->left);
 	}
 	
-	if( tree != NULL ) {
+	if( tree != NULL && tree->value != -1 ) {
 		printf("  %d  ", tree->value);
 	}
 	
@@ -401,7 +401,7 @@ void Sqt_printPostorder(Node_Stc *tree) {
 		Sqt_printPostorder(tree->right);
 	}
 	
-	if( tree != NULL ) {
+	if( tree != NULL && tree->value != -1 ) {
 		printf("  %d  ", tree->value);
 	}
 	
@@ -422,7 +422,9 @@ void Sqt_printDescendingOrder(Node_Stc *tree) {
     
     Sqt_printDescendingOrder(tree->right);
     
-    printf("  %d  ", tree->value);
+    if(tree->value != -1) {
+   		printf("  %d  ", tree->value);	
+    }
     
     Sqt_printDescendingOrder(tree->left);
 	
