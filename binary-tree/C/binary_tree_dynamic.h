@@ -1,8 +1,11 @@
+static int dyn_sing = 0;
+
 // Node struct
 typedef struct node {
 	int value;				// Node content
 	struct node *left;		// Feft child
 	struct node *right;		// Right child
+	int fb; 				// Balanced Factor
 } Node;
 
 
@@ -15,84 +18,117 @@ typedef struct node {
 void Dyn_initTree(Node **tree) {
 	*tree = NULL;
 }
- 
+
 
 /**
- * Single rotate with left
+ * Right rotation
  * @author Luiz Venturote
- * @param Node *tree Binary Tree
+ * @param Node *A Binary Tree
  * @return Node*
  */
-Node * singleRotateWithLeft(Node *tree) {
+void Dyn_rightRotation(Node **A) {
 	
-    Node *tree_aux;
- 
- 	// Swap
-    tree_aux = tree->left;
-    tree->left = tree_aux->right;
-    tree_aux->right = tree;
+	Node *B = (*A)->left; 
+          
+    // Single Rotation
+	if (B->fb == -1)   { // rotação simples   
+	              
+		(*A)->left = B->right; 
+		B->right = (*A); 
+		(*A)->fb = 0; 
+    	(*A) = B; 
+    	
+     } 
+	 
+	 // Double Rotation
+	 else { 
 	
-	return tree_aux;
+		if( (B->right != NULL) ){
+			
+			Node *C = B->right;
+			 
+			B->right = C->left;
+			C->left = B;
+			(*A)->left = C;
+
+			(*A)->left = C->right;
+			C->right = (*A);
+			
+			if (C->fb == -1){ 
+				(*A)->fb = 1; 
+			} else {
+				(*A)->fb = 0;	
+			}
+			    
+			if (C->fb == 1){ 
+				B->fb = -1; 
+			} else {
+				B->fb = 0;
+			} 
+	         
+			(*A) = C; 
+		 }
+	 }
+     
+	 (*A)->fb = 0; 
+     dyn_sing = 0;
+     
 }
 
 
 /**
- * Single rotate with right
+ * Left rotation
  * @author Luiz Venturote
- * @param Node *tree Binary Tree
+ * @param Node *A Binary Tree
  * @return Node*
- */
-Node * singleRotateWithRight(Node *tree) {
-	
-    Node *tree_aux;
- 
- 	// Swap
-    tree_aux = tree->right;
-    if(tree_aux!=NULL)
-    tree->right = tree_aux->left;
-    tree_aux->left = tree;
+ */ 
+void Dyn_leftRotation(Node **A) {
+
+   Node *B = (*A)->right; 
+   
+   // Single Rotation
+   if(B->fb == 1) { 
+   
+	   (*A)->right = B->left; 
+	   B->left = (*A); 
+	   (*A)->fb = 0; 
+       (*A) = B; 
+       
+   }
+   
+	// Double Rotation
+	else {
+
+		if(B->left != NULL) {
+
+			Node *C = B->left;
+			B->left = C->right;
+			(*A)->right = C;
+			C->right = B;
+
+			(*A)->right = C->left;
+			C->left = (*A);
+		   
+			if (C->fb == 1) {
+				(*A)->fb = -1; 
+			} else {
+				(*A)->fb = 0; 
+			}
+
+			if (C->fb == -1) { 
+		 		B->fb = 1; 
+			} else {
+				B->fb = 0;	
+			} 
+		      
+		   (*A) = C; 
+	    }
+	    
+	}
     
-
-	return tree_aux;
-	
-}
-
-
-/**
- * Double rotate with left
- * @author Luiz Venturote
- * @param Node *tree Binary Tree
- * @return Node*
- */
-Node * doubleRotateWithLeft( Node *tree ) {
-	
-    // Rotate with right
-    tree->left = singleRotateWithRight( tree->left );
- 
-    // Rotate with left
-    return singleRotateWithLeft( tree );
-
-	return tree;
-
-}
-
-
-/**
- * Single rotate with right
- * @author Luiz Venturote
- * @param Node *tree Binary Tree
- * @return Node*
- */
-Node * doubleRotateWithRight( Node *tree ) {
-	
-    // Rotate with right
-    tree->right = singleRotateWithLeft( tree->right );
- 
-    // Rotate with left
-    return singleRotateWithRight( tree );
-
-	return tree;
-
+	(*A)->fb = 0; 
+	dyn_sing = 0;
+	 
 }
  
 
@@ -108,52 +144,48 @@ void Dyn_insertNode(Node **tree, Node *new_node){
 	if( (*tree) != NULL ) {
 
 		if ( (*tree)->value > new_node->value ) {
-							  
+			
 			// Insert in left
-			if( (*tree)->left == NULL ){
-				  
-				(*tree)->left = new_node;  				
-				                
-			} else {
-				Dyn_insertNode( &(*tree)->left, new_node); 
-				
-				if( Dyn_isBalanced( (*tree) ) == 0) {
-					
-					if( new_node->value < (*tree)->left->value ) {
-						(*tree) = singleRotateWithLeft( (*tree) );
-					} else {
-		                 (*tree) = doubleRotateWithLeft( (*tree) );
-					}
-		            	
-				}   
-			}
+			Dyn_insertNode( &(*tree)->left, new_node); 
+			if (dyn_sing == 1) { 
+				switch ( (*tree)->fb ) {    
+					case 1 : 
+						(*tree)->fb = 0; 
+						dyn_sing = 0; 
+						break; 
+					case 0 : 
+						(*tree)->fb = -1; 
+						break; 
+                    case -1 : 
+						Dyn_rightRotation( &(*tree) ); 
+						break; 
+            	}
+            }
 			 
 		} else {
 			
 			// Insert in right
-			if ((*tree)->right == NULL){
-				
-				(*tree)->right = new_node;  
-				        
-			} else {
-				Dyn_insertNode( &(*tree)->right, new_node);   
-				
-				if( Dyn_isBalanced( (*tree) ) == 0) {
-					
-					if( new_node->value > (*tree)->right->value ) {
-						(*tree) = singleRotateWithRight( (*tree) );
-					} else {
-		                 (*tree) = doubleRotateWithRight( (*tree) );
-					}
-				} 
-			}
+			Dyn_insertNode( &(*tree)->right, new_node); 
+            if (dyn_sing == 1){ 
+				switch ((*tree)->fb)    {   
+					case -1 : 
+						(*tree)->fb = 0; 
+						dyn_sing = 0; 
+						break; 
+					case 0 : 
+						(*tree)->fb = 1; 
+						break; 
+                    case 1 : 
+						Dyn_leftRotation(&(*tree)); 
+						break;     
+                }
+            }
 			
 		}  
 		
-		printf("\n");
-		
 	} else {
 		(*tree) = new_node;
+		dyn_sing = 1;
 	} 
 	
 }
@@ -173,6 +205,7 @@ void Dyn_addNode(Node **tree, int value){
 	new_node->value = value;
 	new_node->left = NULL;
 	new_node->right = NULL;
+	new_node->fb = 0;
 	
 	// Insert the node in the tree
 	Dyn_insertNode(&(*tree), new_node);   
@@ -311,7 +344,7 @@ void Dyn_gotoxy(int column, int linha) {
 void Dyn_printPreorder(Node *tree) {
 	
 	if( tree != NULL ) {
-		printf("  %d  ", tree->value);
+		printf(" %d", tree->value);
 	}
 	
 	if( tree->left != NULL) {
@@ -339,7 +372,7 @@ void Dyn_printInorder(Node *tree) {
 	}
 	
 	if( tree != NULL ) {
-		printf("  %d  ", tree->value);
+		printf(" %d", tree->value);
 	}
 	
 	if( tree->right != NULL) {
@@ -367,7 +400,7 @@ void Dyn_printPostorder(Node *tree) {
 	}
 	
 	if( tree != NULL ) {
-		printf("  %d  ", tree->value);
+		printf(" %d", tree->value);
 	}
 	
 }
@@ -387,7 +420,7 @@ void Dyn_printDescendingOrder(Node *tree) {
     
     Dyn_printDescendingOrder(tree->right);
     
-    printf("  %d  ", tree->value);
+    printf(" %d", tree->value);
     
     Dyn_printDescendingOrder(tree->left);
 	
@@ -557,5 +590,93 @@ void BinaryTreeDyn() {
 	printf(" Descending Order:");
 	Dyn_printDescendingOrder(tree);
 	printf("\n\n");
+	
+}
+
+
+/**
+ * Initialize dynamic binary tree representation with executing time
+ * @author Luiz Venturote
+ * @return void
+ */
+void BinaryTreeDynET() {
+	
+	int i=0, value=0;
+	
+	float result=0;
+	
+	// Tree
+	Node *tree;
+	
+	// Init
+	Dyn_initTree(&tree);
+	
+	// Qty nodes
+	int qty_nodes = 100000;
+	
+	// Vector values
+	int values[qty_nodes];
+	
+	for(i=0; i<qty_nodes; i++) {
+		value = rand();
+		values[i] = value;	
+	}
+	
+	// Time to print the sorted list of nodes
+	time_t seconds = time(NULL);
+	
+	// Adds nodes in the tree
+	for(i=0; i<qty_nodes; i++) {
+		Dyn_addNode(&tree, values[i]);	
+	}
+	
+	// Print tree - Inorder 
+	printf(" Inorder:");
+	Dyn_printInorder(tree);
+	printf("\n\n");
+	
+	// End time tree
+	float end_time_tree = time(NULL) - seconds;
+	
+	// Time to print the sorted list with bubble sort
+	seconds = time(NULL);
+	
+	// Ording vector
+	bubbleSort(values, qty_nodes);
+	
+	// Print vector
+	printf(" Bubble Sort: ");
+	for(i=0; i<qty_nodes; i++) {
+		printf("%d ", values[i]);
+	}
+	printf("\n\n");
+	
+	// End time bubble
+	float end_time_bubble = time(NULL) - seconds;
+	
+	// Results
+	printf(" Tempo decorrido da arvore: %f", end_time_tree);
+	printf("\n\n Tempo decorrido do bubble sort: %f", end_time_bubble);
+	
+	if(end_time_tree < end_time_bubble) {
+		
+		if(end_time_tree == 0) {
+			result = (end_time_bubble*100);
+			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);	
+		} else {
+			result = ((end_time_bubble/end_time_tree)*100)-100;
+			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);		
+		}
+		
+	} else {
+		
+		if(end_time_tree == end_time_bubble) {
+			printf("\n\n Sem diferenca no tempo de execucao\n\n");		
+		} else {
+			result = ((end_time_tree/end_time_bubble)*100)-100;
+			printf("\n\n Bubble e %3.2f%% mais rapido\n\n",  result);
+		}
+		
+	}
 	
 }

@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h> 
 #include <windows.h>
+#include <time.h>
+#include "bubble_sort.h"
 #include "interface.h"
 #include "binary_tree_sequential.h"
 #include "binary_tree_dynamic.h"
@@ -27,8 +29,18 @@ void main() {
 				displayFooter();
 				break;
 			case 2:
+				displayHeader("Arvore Binaria com alocacao Sequencial com verificacao de tempo execucao");
+				BinaryTreeSeq();
+				displayFooter();
+				break;
+			case 3:
 				displayHeader("Arvore Binaria com alocacao Dinamica");
 				BinaryTreeDyn();
+				displayFooter();
+				break;
+			case 4:
+				displayHeader("Arvore Binaria com alocacao Dinamica com verificacao de tempo execucao");
+				BinaryTreeDynET();
 				displayFooter();
 				break;
 			case 0:
