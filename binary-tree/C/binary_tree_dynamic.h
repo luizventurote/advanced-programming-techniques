@@ -31,14 +31,14 @@ void Dyn_rightRotation(Node **A) {
 	Node *B = (*A)->left; 
           
     // Single Rotation
-	if (B->fb == -1)   { // rotação simples   
+	if (B->fb == -1) {   
 	              
 		(*A)->left = B->right; 
 		B->right = (*A); 
 		(*A)->fb = 0; 
     	(*A) = B; 
     	
-     } 
+    } 
 	 
 	 // Double Rotation
 	 else { 

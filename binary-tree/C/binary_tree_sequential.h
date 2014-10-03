@@ -1,4 +1,5 @@
 static int tree_size = 15;
+static int sqt_sing = 0;
 
 // Node struct
 typedef struct node_stc {
@@ -8,7 +9,7 @@ typedef struct node_stc {
 	int right_pos;
 	struct node_stc * right;
 	int level;
-	int bf;
+	int fb;
 } Node_Stc;
 
 
@@ -28,7 +29,7 @@ void Sqt_initTree(Node_Stc *tree) {
 		tree[i].value = -1;	
 		
 		// Balanced factor
-		tree[i].bf = 0;
+		tree[i].fb = 0;
 		
 		// Lenf and Right position calc
 		tree[i].left_pos = (i*2)+1;
@@ -79,178 +80,196 @@ void Sqt_initTree(Node_Stc *tree) {
 
 
 /**
- * Single rotate with left
+ * Right rotation
  * @author Luiz Venturote
- * @param Node_Stc *tree Binary Tree
- * @return Node_Stc*
+ * @param Node *A Binary Tree
+ * @return Node*
  */
-void Sqt_singleRotateWithLeft(Node_Stc *tree) {
+void Sqt_rightRotation(Node_Stc *A) {
 	
-	int tree_value = tree->value;
-    int pivot_value = tree->left->value;
-    Node_Stc * pivot = tree->left->left;
-    Node_Stc * sub_pivot = tree->left->left;
-    
-    printf("\n\n |###| tree->value: %d ", tree->value);
-    
-    if(tree->left!= NULL) {
-    	printf("|###| tree->left->value: %d ", tree->left->value);	
-    }
-    
-    if(tree->right!= NULL) {
-    	printf("|###| tree->right->value: %d ", tree->right->value);	
-    }
-    
-    if(pivot!= NULL) {
-    	printf("|###| pivot->value: %d ", pivot->value);	
-    }
-    
-    if(sub_pivot!= NULL) {
-    	printf("|###| sub_pivot->value: %d ", sub_pivot->value);	
-    }
- 
- 	// Swap
-	tree->value = pivot_value;
-	tree->bf += 2;
-	tree->right->value = tree_value;
+	Node_Stc *B = A->left; 
+          
+    // Single Rotation
+	if (B->fb == -1) {  
 	
-	tree->right->left->value = tree->left->right->value;
-	tree->right->left->bf = tree->left->right->bf;
+		// Node A
+		int A_value = A->value;
+		int A_left_value = A->left->value;
+		int A_right_value = A->right->value;
+		
+		// Node B
+		int B_value = B->value;
+		int B_left_value = B->left->value;
+		int B_right_value = B->right->value;
+		
+		// Node C
+		Node_Stc *C = B->left;
+		int C_value = C->value;
+		int C_left_value = C->left->value;
+		int C_right_value = C->right->value;
+		int C_fb = C->fb;
+		
+		A->value = B_value;
+		A->right->value = A_value;
+		A->left->value = C_value;
+			
+		B->left->value = C_left_value;
+		B->right->value = C_right_value;
+			
+		A->right->left->value = B_right_value;
+		A->right->right->value = A_right_value;
+   
+		A->fb = 0; 
+		B->fb = C_fb;
+    	
+     } 
+	 
+	 // Double Rotation
+	 else { 
+	 
+		// Node A
+		int A_value = A->value;
+		int A_left_value = A->left->value;
+		int A_right_value = A->right->value;
+		
+		// Node B
+		int B_value = B->value;
+		int B_left_value = B->left->value;
+		int B_right_value = B->right->value;
 	
-	tree->left->value = sub_pivot->value;
-	tree->left->bf = sub_pivot->bf;
-	sub_pivot->value = -1;
-	sub_pivot->bf = 0;	
-	
-	if(pivot->left!= NULL) {
-		pivot->value = pivot->left->value;
-		pivot->bf = pivot->left->bf;	
-		pivot->left->value = -1;
-		pivot->left->bf = 0;
-	}
-	
-	if(pivot->right!= NULL) {
-		tree->left->right->value = pivot->right->value;
-		tree->left->right->bf = pivot->right->bf;		
-		pivot->right->value = -1;
-		pivot->right->bf = 0;	
-	}
+		if( B->right->value != -1 ) {
+			
+			// Node C
+			Node_Stc *C = B->right;
+			int C_value = C->value;
+			int C_left_value = C->left->value;
+			int C_right_value = C->right->value;
+			
+			A->value = C_value;
+			A->right->value = A_value;
+			A->left->value = B_value;
+			
+			B->right->value = C_left_value;
+			
+			A->left->left->value = C_right_value;
+			A->left->right->value = A_right_value;
 
-	printf("\n\n -------------- ");
-	
-	printf("\n\n |###| tree->value: %d ", tree->value);
-    
-    if(tree->left!= NULL) {
-    	printf("|###| tree->left->value: %d ", tree->left->value);	
-    }
-    
-    if(tree->right!= NULL) {
-    	printf("|###| tree->right->value: %d ", tree->right->value);	
-    }
-    
-    if(pivot!= NULL) {
-    	printf("|###| pivot->value: %d ", pivot->value);	
-    }
-    
-    if(sub_pivot!= NULL) {
-    	printf("|###| sub_pivot->value: %d ", sub_pivot->value);	
-    }
-    
+			if (C->fb == -1){ 
+				A->fb = 1; 
+			} else {
+				A->fb = 0;	
+			}
+			    
+			if (C->fb == 1){ 
+				B->fb = -1; 
+			} else {
+				B->fb = 0;
+			} 
+			
+		 }
+	 }
+     
+	 A->fb = 0; 
+     sqt_sing = 0;
+     
 }
 
 
 /**
- * Single rotate with right
+ * Left rotation
  * @author Luiz Venturote
- * @param Node_Stc *tree Binary Tree
- * @return Node_Stc*
- */
-void Sqt_singleRotateWithRight(Node_Stc *tree) {
-	
-	int tree_value = tree->value;
-    int pivot_value = tree->right->value;
-    Node_Stc * pivot = tree->right->right;
-    Node_Stc * sub_pivot = tree->right->right;
-    
-    printf("\n\n |###| tree->value: %d ", tree->value);
-    
-    if(tree->left!= NULL) {
-    	printf("|###| tree->left->value: %d ", tree->left->value);	
-    }
-    
-    if(tree->right!= NULL) {
-    	printf("|###| tree->right->value: %d ", tree->right->value);	
-    }
-    
-    if(pivot!= NULL) {
-    	printf("|###| pivot->value: %d ", pivot->value);	
-    }
-    
-    if(sub_pivot!= NULL) {
-    	printf("|###| sub_pivot->value: %d ", sub_pivot->value);	
-    }
- 
- 	// Swap
-	tree->value = pivot_value;
-	tree->bf -= 2;
-	tree->left->value = tree_value;
-	
-	tree->left->right->value = tree->right->left->value;
-	tree->left->right->bf = tree->right->left->bf;
-	
-	tree->right->value = sub_pivot->value;
-	tree->right->bf = sub_pivot->bf;
-	sub_pivot->value = -1;
-	sub_pivot->bf = 0;
-	
-	if(pivot->left!= NULL) {		
-		pivot->value = pivot->right->value;
-		pivot->bf = pivot->right->bf;
-		pivot->right->value = -1;
-		pivot->right->bf = 0;
+ * @param Node *A Binary Tree
+ * @return Node*
+ */ 
+void Sqt_leftRotation(Node_Stc *A) {
+
+   Node_Stc *B = A->right; 
+   
+   // Single Rotation
+   if(B->fb == 1) { 
+   
+		// Node A
+		int A_value = A->value;
+		int A_left_value = A->left->value;
+		int A_right_value = A->right->value;
+		
+		// Node B
+		int B_value = B->value;
+		int B_left_value = B->left->value;
+		int B_right_value = B->right->value;
+		
+		// Node C
+		Node_Stc *C = B->right;
+		int C_value = C->value;
+		int C_left_value = C->left->value;
+		int C_right_value = C->right->value;
+		int C_fb = C->fb;
+		
+		A->value = B_value;
+		A->left->value = A_value;
+		A->right->value = C_value;
+		
+		B->left->value = C_left_value;
+		B->right->value = C_right_value;
+		
+		A->left->left->value = A_left_value;
+		A->left->right->value = B_left_value;
+   
+		A->fb = 0; 
+		B->fb = C_fb;
+       
+   }
+   
+	// Double Rotation
+	else {
+		
+		// Node A
+		int A_value = A->value;
+		int A_left_value = A->left->value;
+		int A_right_value = A->right->value;
+		
+		// Node B
+		int B_value = B->value;
+		int B_left_value = B->left->value;
+		int B_right_value = B->right->value;
+		
+		if( B->left->value != -1 ) {
+
+			// Node C
+			Node_Stc *C = B->left;
+			int C_value = C->value;
+			int C_left_value = C->left->value;
+			int C_right_value = C->right->value;
+			
+			A->value = C_value;
+			A->left->value = A_value;
+			A->right->value = B_value;
+			
+			B->left->value = C_right_value;
+			B->right->value = B_right_value;
+			
+			A->left->left->value = A_left_value;
+			A->left->right->value = C_left_value;
+		   
+			if (C->fb == 1) {
+				A->fb = -1; 
+			} else {
+				A->fb = 0; 
+			}
+
+			if (C->fb == -1) { 
+		 		B->fb = 1; 
+			} else {
+				B->fb = 0;	
+			} 
+			
+	    }
+	    
 	}
-	
-	if(pivot->right!= NULL) {		
-		tree->right->left->value = pivot->left->value;
-		tree->right->left->bf = pivot->left->bf;		
-		pivot->left->value = -1;
-		pivot->left->bf = 0;	
-	}
-	
-}
-
-
-/**
- * Double rotate with left
- * @author Luiz Venturote
- * @param Node_Stc *tree Binary Tree
- * @return Node_Stc*
- */
-void Sqt_doubleRotateWithLeft( Node_Stc *tree ) {
-	
-    // Rotate with right    
-    Sqt_singleRotateWithRight( tree->left );
- 
-    // Rotate with left
-    Sqt_singleRotateWithLeft( tree );
-
-}
-
-
-/**
- * Single rotate with right
- * @author Luiz Venturote
- * @param Node_Stc *tree Binary Tree
- * @return Node_Stc*
- */
-void Sqt_doubleRotateWithRight( Node_Stc *tree ) {
-	
-    // Rotate with right
-    Sqt_singleRotateWithLeft( tree->right );
- 
-    // Rotate with left
-   Sqt_singleRotateWithRight( tree );
-
+    
+	A->fb = 0; 
+	sqt_sing = 0;
+	 
 }
  
 
@@ -269,9 +288,6 @@ void Sqt_addNode(Node_Stc *tree, int value) {
 	
 	// Insert the node in the tree
 	Sqt_insertNode( tree, new_node);   
-	
-	Sqt_debugTree(tree);
-	printf("\n\n ============================== \n\n");
 	
 }
 
@@ -292,69 +308,51 @@ void Sqt_insertNode(Node_Stc *tree, Node_Stc new_node) {
 			// Insert in left
 			if(tree->left != NULL) {
 				
-				// Balanced factor
-				if(tree->left->bf != -1) {
-					tree->bf--; 	
-				}
-				
-				if( tree->left->value == -1) {
-				  
-					tree->left->value = new_node.value; 
-					        
-				} else {
-					Sqt_insertNode( tree->left, new_node); 
-					
-					if( Sqt_isBalanced( tree ) == 0) {
-						
-						if( new_node.value < tree->left->value ) {
-							printf("RSE");
-							Sqt_singleRotateWithLeft( tree );
-						} else {
-							printf("Rotacao dupla para esquerda");
-			                Sqt_doubleRotateWithLeft( tree );
-						}
-			            	
-					}   
-				}
-				
-			}
+				Sqt_insertNode( tree->left, new_node); 
+				if (sqt_sing == 1) { 
+					switch ( tree->fb ) {    
+						case 1 : 
+							tree->fb = 0; 
+							sqt_sing = 0; 
+							break; 
+						case 0 : 
+							tree->fb = -1; 
+							break; 
+	                    case -1 : 
+							//Sqt_rightRotation(tree); 
+							break; 
+	            	}
+	            }
+            
+            }
 			
 			 
 		} else {
 			
 			// Insert in right
 			if( tree->right != NULL) {
-				
-				// Balanced factor
-				if(tree->left->bf != -1) {
-					tree->bf++; 	
-				}
-			
-				if ( tree->right->value == -1){
-				
-					tree->right->value = new_node.value; 
-										        
-				} else {
-					Sqt_insertNode( tree->right, new_node);   
-					
-					if( Sqt_isBalanced( tree ) == 0) {
-						
-						if( new_node.value > tree->right->value ) {
-							printf("Rotacao simples para direita");
-							Sqt_singleRotateWithRight( tree );
-						} else {
-							printf("Rotacao dupla para direita");
-			                 Sqt_doubleRotateWithRight( tree );
-						}
-					} 
-				}
-				
-			}
+				Sqt_insertNode( tree->right, new_node); 
+	            if (sqt_sing == 1){ 
+					switch (tree->fb)    {   
+						case -1 : 
+							tree->fb = 0; 
+							sqt_sing = 0; 
+							break; 
+						case 0 : 
+							tree->fb = 1; 
+							break; 
+	                    case 1 : 
+							//Sqt_leftRotation(tree); 
+							break;     
+	                }
+	            }
+        	}
 						
 		} 
 		
 	} else {
 		tree->value = new_node.value;
+		sqt_sing = 1;
 	} 
 }
 
@@ -435,7 +433,7 @@ void Sqt_printTree(Node_Stc *tree, int line, int column, int rate){
        if ((line < 25) && (column <= 80) && (column > 0)){    
            Sqt_gotoxy(column,line);
            if( tree->value != -1 )
-           printf("< %d (%d)>",tree->value, tree->bf);
+           printf("< %d (%d)>",tree->value, tree->fb);
            else
            printf("<>");
            rate = rate /2;
@@ -469,7 +467,7 @@ void Sqt_gotoxy(int column, int linha) {
 void Sqt_debugTree(Node_Stc *tree) {
 	
 	if( tree != NULL ) {
-		printf("\n\n Node: %d - bf: %d - level: %d ", tree->value, tree->bf, tree->level);
+		printf("\n\n Node: %d - bf: %d - level: %d ", tree->value, tree->fb, tree->level);
 		
 		if(tree->left != NULL) {
 			printf("| Left: %d ", tree->left->value);
@@ -637,7 +635,7 @@ int Sqt_isPerfectBalanced(Node_Stc *tree) {
 	int rnq; // for qty of the nodes of right subtree
  
 	// If tree is empty then return true
-	if(tree == NULL)
+	if(tree == NULL || tree->value != -1)
 		return 1; 
  
 	// Get the node qty of left and right sub trees
@@ -689,11 +687,8 @@ void BinaryTreeSeq() {
 	Sqt_addNode(tree, 10);
 	Sqt_addNode(tree, 5);
 	Sqt_addNode(tree, 8);
-	Sqt_addNode(tree, 4);
-	Sqt_addNode(tree, 1);
-	Sqt_addNode(tree, 7);
 	
-	//Sqt_displayTree(tree);
+	Sqt_displayTree(tree);
 	
 	// Search node
 	Node_Stc *node_found = Sqt_searchNode(tree, tree->value);
@@ -709,10 +704,10 @@ void BinaryTreeSeq() {
 	printf(" Node qty: %d \n\n", Sqt_getNodeQty(node_found) );
 	
 	// Is perfectly balanced
-	printf(" Arvore perfeitamente balanceada: %d \n\n", Sqt_isPerfectBalanced(node_found) );
+	//printf(" Arvore perfeitamente balanceada: %d \n\n", Sqt_isPerfectBalanced(node_found) );
 	
 	// Is strictly
-	printf(" Arvore Estritamente binaria: %d \n\n", Sqt_is2Tree(node_found) );
+	//printf(" Arvore Estritamente binaria: %d \n\n", Sqt_is2Tree(node_found) );
 	
 	// Print tree - Preorder 
 	printf(" Preorder:");

@@ -28,17 +28,17 @@ void main() {
 				BinaryTreeSeq();
 				displayFooter();
 				break;
+//			case 2:
+//				displayHeader("Arvore Binaria com alocacao Sequencial com verificacao de tempo execucao");
+//				BinaryTreeSeq();
+//				displayFooter();
+//				break;
 			case 2:
-				displayHeader("Arvore Binaria com alocacao Sequencial com verificacao de tempo execucao");
-				BinaryTreeSeq();
-				displayFooter();
-				break;
-			case 3:
 				displayHeader("Arvore Binaria com alocacao Dinamica");
 				BinaryTreeDyn();
 				displayFooter();
 				break;
-			case 4:
+			case 3:
 				displayHeader("Arvore Binaria com alocacao Dinamica com verificacao de tempo execucao");
 				BinaryTreeDynET();
 				displayFooter();
