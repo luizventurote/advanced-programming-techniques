@@ -657,13 +657,16 @@ void BinaryTreeDyn() {
 	Dyn_initTree(&tree);
 	
 	// Adds nodes
+	Dyn_addNode(&tree, 100);
+	Dyn_addNode(&tree, 50);
+	Dyn_addNode(&tree, 150);
+	Dyn_addNode(&tree, 25);
+	Dyn_addNode(&tree, 35);
+	Dyn_addNode(&tree, 15);
 	Dyn_addNode(&tree, 10);
 	Dyn_addNode(&tree, 5);
-	Dyn_addNode(&tree, 8);
-	Dyn_addNode(&tree, 4);
-	Dyn_addNode(&tree, 6);
-	Dyn_addNode(&tree, 7);
 	Dyn_addNode(&tree, 3);
+	Dyn_addNode(&tree, 2);
 	
 	Dyn_displayTree(tree);
 	

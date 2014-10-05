@@ -1,4 +1,4 @@
-static int tree_size = 15;
+static int tree_size = 31;
 static int sqt_sing = 0;
 
 // Node struct
@@ -80,6 +80,48 @@ void Sqt_initTree(Node_Stc *tree) {
 
 
 /**
+ * Update subtree
+ * @author Luiz Venturote
+ * @param Node_Stc *tree Tree
+ * @return void
+ */
+void updateSubTree(Node_Stc *sub_tree) {
+	
+	if(sub_tree != NULL) {
+		
+		if(sub_tree->left != NULL) {	
+			
+			if(sub_tree->left->left != NULL) {
+				
+				sub_tree->left->value = sub_tree->left->left->value;
+				
+			} else {
+				sub_tree->left->value = -1;
+			}	
+			
+			updateSubTree(sub_tree->left);	
+			
+		}
+		
+		if(sub_tree->right != NULL) {
+			
+			if(sub_tree->right->right != NULL) {
+				
+				sub_tree->right->value 	= sub_tree->right->right->value;
+
+			} else {
+				sub_tree->right->value = -1;
+			}	
+			
+			updateSubTree(sub_tree->right);
+			
+		}
+	}
+	
+}
+
+
+/**
  * Right rotation
  * @author Luiz Venturote
  * @param Node *A Binary Tree
@@ -105,8 +147,17 @@ void Sqt_rightRotation(Node_Stc *A) {
 		// Node C
 		Node_Stc *C = B->left;
 		int C_value = C->value;
-		int C_left_value = C->left->value;
-		int C_right_value = C->right->value;
+		
+		int C_left_value = -1;
+		if(C->left != NULL) {
+			C_left_value = C->left->value;
+		}
+			
+		int C_right_value = -1;
+		if(C->right != NULL) {
+			C_right_value = C->right->value;
+		}
+		
 		int C_fb = C->fb;
 		
 		A->value = B_value;
@@ -121,6 +172,10 @@ void Sqt_rightRotation(Node_Stc *A) {
    
 		A->fb = 0; 
 		B->fb = C_fb;
+		
+		C->fb = 0;
+		
+		updateSubTree(C);
     	
      } 
 	 
@@ -142,8 +197,16 @@ void Sqt_rightRotation(Node_Stc *A) {
 			// Node C
 			Node_Stc *C = B->right;
 			int C_value = C->value;
-			int C_left_value = C->left->value;
-			int C_right_value = C->right->value;
+			
+			int C_left_value = -1;
+			if(C->left != NULL) {
+				C_left_value = C->left->value;
+			}
+			
+			int C_right_value = -1;
+			if(C->right != NULL) {
+				C_right_value = C->right->value;
+			}
 			
 			A->value = C_value;
 			A->right->value = A_value;
@@ -165,6 +228,8 @@ void Sqt_rightRotation(Node_Stc *A) {
 			} else {
 				B->fb = 0;
 			} 
+			
+			updateSubTree(C);
 			
 		 }
 	 }
@@ -201,8 +266,17 @@ void Sqt_leftRotation(Node_Stc *A) {
 		// Node C
 		Node_Stc *C = B->right;
 		int C_value = C->value;
-		int C_left_value = C->left->value;
-		int C_right_value = C->right->value;
+		
+		int C_left_value = -1;
+		if(C->left != NULL) {
+			C_left_value = C->left->value;
+		}
+			
+		int C_right_value = -1;
+		if(C->right != NULL) {
+			C_right_value = C->right->value;
+		}
+		
 		int C_fb = C->fb;
 		
 		A->value = B_value;
@@ -217,6 +291,8 @@ void Sqt_leftRotation(Node_Stc *A) {
    
 		A->fb = 0; 
 		B->fb = C_fb;
+		
+		updateSubTree(C);
        
    }
    
@@ -238,8 +314,16 @@ void Sqt_leftRotation(Node_Stc *A) {
 			// Node C
 			Node_Stc *C = B->left;
 			int C_value = C->value;
-			int C_left_value = C->left->value;
-			int C_right_value = C->right->value;
+			
+			int C_left_value = -1;
+			if(C->left != NULL) {
+				C_left_value = C->left->value;
+			}
+			
+			int C_right_value = -1;
+			if(C->right != NULL) {
+				C_right_value = C->right->value;
+			}
 			
 			A->value = C_value;
 			A->left->value = A_value;
@@ -262,6 +346,8 @@ void Sqt_leftRotation(Node_Stc *A) {
 			} else {
 				B->fb = 0;	
 			} 
+			
+			updateSubTree(C);
 			
 	    }
 	    
@@ -319,7 +405,7 @@ void Sqt_insertNode(Node_Stc *tree, Node_Stc new_node) {
 							tree->fb = -1; 
 							break; 
 	                    case -1 : 
-							//Sqt_rightRotation(tree); 
+							Sqt_rightRotation(tree); 
 							break; 
 	            	}
 	            }
@@ -342,7 +428,7 @@ void Sqt_insertNode(Node_Stc *tree, Node_Stc new_node) {
 							tree->fb = 1; 
 							break; 
 	                    case 1 : 
-							//Sqt_leftRotation(tree); 
+							Sqt_leftRotation(tree); 
 							break;     
 	                }
 	            }
@@ -433,7 +519,7 @@ void Sqt_printTree(Node_Stc *tree, int line, int column, int rate){
        if ((line < 25) && (column <= 80) && (column > 0)){    
            Sqt_gotoxy(column,line);
            if( tree->value != -1 )
-           printf("< %d (%d)>",tree->value, tree->fb);
+           printf("<%d>",tree->value, tree->fb);
            else
            printf("<>");
            rate = rate /2;
@@ -673,6 +759,28 @@ int Sqt_is2Tree(Node_Stc *tree) {
 
 
 /**
+ * Swap node values
+ * @author Luiz Venturote
+ * @param Node_Stc *node_1
+ * @param Node_Stc *node_2
+ * @return void
+ */
+void Sqt_swapNodeValues(Node_Stc *node_1, Node_Stc *node_2) {
+
+	// Node buffer
+	Node_Stc node_buf;
+	
+	// Save values
+	node_buf.value = node_1->value;
+	
+	// Swap node values
+	node_1->value 	= node_2->value;
+	node_2->value	= node_buf.value;
+	
+}
+
+
+/**
  * Initialize sequential binary tree representation
  * @author Luiz Venturote
  * @return void
@@ -684,9 +792,16 @@ void BinaryTreeSeq() {
 	Sqt_initTree(tree);
 	
 	// Adds nodes
+	Sqt_addNode(tree, 100);
+	Sqt_addNode(tree, 50);
+	Sqt_addNode(tree, 150);
+	Sqt_addNode(tree, 25);
+	Sqt_addNode(tree, 35);
+	Sqt_addNode(tree, 15);
 	Sqt_addNode(tree, 10);
 	Sqt_addNode(tree, 5);
-	Sqt_addNode(tree, 8);
+	Sqt_addNode(tree, 3);
+	Sqt_addNode(tree, 2);
 	
 	Sqt_displayTree(tree);
 	
