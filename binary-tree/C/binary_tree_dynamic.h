@@ -529,6 +529,121 @@ int Dyn_is2Tree(Node *tree) {
 
 
 /**
+ * Adds nodes in the tree
+ * @author Luiz Venturote
+ * @param Node **tree Binary Tree
+ * @param int *vector Int Vector
+ * @param int qty quantity of nodes in the tree
+ * @return void
+ */
+void Dyn_addNodesInTheTree(Node **tree, int *vector, int qty) {
+	
+	int i=0;
+	
+	for(i=0; i<qty; i++) {
+		Dyn_addNode(tree, vector[i]);	
+	}
+	
+}
+	
+
+/**
+ * Print int vector
+ * @author Luiz Venturote
+ * @param int *vector Int Vector
+ * @param int qty quantity of nodes in the tree
+ * @return void
+ */
+void Dyn_printIntVector(int *vector, int qty) {
+	
+	int i=0;
+	
+	printf("\n === Values of the int vector ================\n");
+	
+	for(i=0; i<qty; i++) {
+		printf(" %d ", vector[i]);
+	}
+	
+	printf("\n =============================================\n");
+		
+}
+
+
+/**
+ * Add random values in vector
+ * @author Luiz Venturote
+ * @param int *vector Int Vector
+ * @param int qty quantity of nodes in the tree
+ * @return void
+ */
+void Dyn_addRandValuesInVector(int *vector, int qty) {
+	
+	int i=0;
+	
+	for(i=0; i<qty; i++) {
+		vector[i] = rand() % qty+qty;	
+	}
+	
+}
+
+
+/**
+ * Print tree inorder
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return void
+ */
+void Dyn_printTreeInorder(Node *tree) {
+	printf("\n === Tree Inorder ============================\n");
+	Dyn_printInorder(tree);
+	printf("\n =============================================\n");
+} 
+
+
+/**
+ * Print results
+ * @author Luiz Venturote
+ * @param float time_1
+ * @param float time_2
+ * @return void
+ */
+void Dyn_printResults(float time_1, float time_2) {
+	
+	float result=0;
+	
+	// Results
+	printf("\n === Results =================================\n");
+	
+	printf("\n Tempo decorrido da arvore: %f", time_1);
+	printf("\n\n Tempo decorrido do bubble sort: %f", time_2);
+	
+	if(time_1 < time_2) {
+		
+		if(time_1 == 0) {
+			result = (time_2*100);
+			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);	
+		} else {
+			result = ((time_2/time_1)*100)-100;
+			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);		
+		}
+		
+	} else {
+		
+		if(time_1 == time_2) {
+			printf("\n\n Sem diferenca no tempo de execucao\n\n");		
+		} else {
+			result = ((time_1/time_2)*100)-100;
+			printf("\n\n Bubble e %3.2f%% mais rapido\n\n",  result);
+		}
+		
+	}
+	
+	printf(" =============================================\n\n");
+	
+}
+	
+	
+/**
  * Initialize dynamic binary tree representation
  * @author Luiz Venturote
  * @return void
@@ -603,8 +718,6 @@ void BinaryTreeDynET() {
 	
 	int i=0, value=0;
 	
-	float result=0;
-	
 	// Tree
 	Node *tree;
 	
@@ -617,23 +730,23 @@ void BinaryTreeDynET() {
 	// Vector values
 	int values[qty_nodes];
 	
-	for(i=0; i<qty_nodes; i++) {
-		value = rand();
-		values[i] = value;	
-	}
+	// Add random values in vector
+	Dyn_addRandValuesInVector(values, qty_nodes);
+	
+	// Print Vector
+	Dyn_printIntVector(values, qty_nodes);
 	
 	// Time to print the sorted list of nodes
 	time_t seconds = time(NULL);
 	
 	// Adds nodes in the tree
-	for(i=0; i<qty_nodes; i++) {
-		Dyn_addNode(&tree, values[i]);	
-	}
+	Dyn_addNodesInTheTree(&tree, values, qty_nodes);
 	
 	// Print tree - Inorder 
-	printf(" Inorder:");
-	Dyn_printInorder(tree);
-	printf("\n\n");
+	Dyn_printTreeInorder(tree);
+	
+	// Print vector
+	Dyn_printIntVector(values, qty_nodes);
 	
 	// End time tree
 	float end_time_tree = time(NULL) - seconds;
@@ -645,38 +758,12 @@ void BinaryTreeDynET() {
 	bubbleSort(values, qty_nodes);
 	
 	// Print vector
-	printf(" Bubble Sort: ");
-	for(i=0; i<qty_nodes; i++) {
-		printf("%d ", values[i]);
-	}
-	printf("\n\n");
+	Dyn_printIntVector(values, qty_nodes);
 	
 	// End time bubble
 	float end_time_bubble = time(NULL) - seconds;
 	
-	// Results
-	printf(" Tempo decorrido da arvore: %f", end_time_tree);
-	printf("\n\n Tempo decorrido do bubble sort: %f", end_time_bubble);
-	
-	if(end_time_tree < end_time_bubble) {
-		
-		if(end_time_tree == 0) {
-			result = (end_time_bubble*100);
-			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);	
-		} else {
-			result = ((end_time_bubble/end_time_tree)*100)-100;
-			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);		
-		}
-		
-	} else {
-		
-		if(end_time_tree == end_time_bubble) {
-			printf("\n\n Sem diferenca no tempo de execucao\n\n");		
-		} else {
-			result = ((end_time_tree/end_time_bubble)*100)-100;
-			printf("\n\n Bubble e %3.2f%% mais rapido\n\n",  result);
-		}
-		
-	}
+	// Print result
+	Dyn_printResults(end_time_tree, end_time_bubble);
 	
 }
