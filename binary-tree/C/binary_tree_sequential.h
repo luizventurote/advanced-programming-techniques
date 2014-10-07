@@ -694,7 +694,7 @@ Node_Stc* Sqt_searchNode(Node_Stc *tree, int value) {
  */
 int Sqt_NodeQty(Node_Stc *tree) {
 	
-	if(tree == NULL) {
+	if(tree == NULL || tree->value == -1) {
 		return 0;
 	}
 	
@@ -721,15 +721,17 @@ int Sqt_isPerfectBalanced(Node_Stc *tree) {
 	int rnq; // for qty of the nodes of right subtree
  
 	// If tree is empty then return true
-	if(tree == NULL || tree->value != -1)
+	if(tree == NULL || tree->value == -1) {
 		return 1; 
- 
+	} 
+		
 	// Get the node qty of left and right sub trees
 	lnq = Sqt_NodeQty(tree->left);
 	rnq = Sqt_NodeQty(tree->right);
  
-	if( abs(lnq-rnq) <= 1 && Sqt_isBalanced(tree->left) && Sqt_isBalanced(tree->right))
+	if( abs(lnq-rnq) <= 1 && Sqt_isPerfectBalanced(tree->left) && Sqt_isPerfectBalanced(tree->right)) {
 		return 1;
+	}
  
 	return 0;
 }
@@ -745,11 +747,17 @@ int Sqt_is2Tree(Node_Stc *tree) {
 
 	if(tree) {
 		
-        if( ( (!tree->right)&&(tree->left) ) || ( (tree->right)&&(!tree->left) ) ) {
-        	return 0;	
-        } else {
-	    	return Sqt_is2Tree(tree->left) && Sqt_is2Tree(tree->right);
+		if( (tree->right) && (tree->left) ) {
+			
+			if( ( (tree->right->value == -1)&&(tree->left->value != -1) ) || ( (tree->right->value != -1)&&(tree->left->value == -1) ) ) {
+	        	return 0;	
+	        } else {
+		    	return Sqt_is2Tree(tree->left) && Sqt_is2Tree(tree->right);
+			}
+			
 		}
+		
+		return 1;
 		
     }
     
@@ -819,10 +827,10 @@ void BinaryTreeSeq() {
 	printf(" Node qty: %d \n\n", Sqt_getNodeQty(node_found) );
 	
 	// Is perfectly balanced
-	//printf(" Arvore perfeitamente balanceada: %d \n\n", Sqt_isPerfectBalanced(node_found) );
+	printf(" Arvore perfeitamente balanceada: %d \n\n", Sqt_isPerfectBalanced(node_found) );
 	
 	// Is strictly
-	//printf(" Arvore Estritamente binaria: %d \n\n", Sqt_is2Tree(node_found) );
+	printf(" Arvore Estritamente binaria: %d \n\n", Sqt_is2Tree(node_found) );
 	
 	// Print tree - Preorder 
 	printf(" Preorder:");
