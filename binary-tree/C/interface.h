@@ -12,9 +12,9 @@ int MenuOption() {
 	system("cls");
 	printf(" === Arvore Binaria =========================== \n");
 	printf(" 1) Representacao sequencial \n");
-//	printf(" 2) Representacao sequencial com verificacao de tempo execucao\n");
-	printf(" 2) Representacao dinamica \n");
-	printf(" 3) Representacao dinamica com verificacao de tempo execucao \n");
+	printf(" 2) Representacao sequencial com verificacao de tempo execucao\n");
+	printf(" 3) Representacao dinamica \n");
+	printf(" 4) Representacao dinamica com verificacao de tempo execucao \n");
 	printf(" 0) Exit \n");
 	printf("\n Select option: ");
 	scanf("%d", &opt);

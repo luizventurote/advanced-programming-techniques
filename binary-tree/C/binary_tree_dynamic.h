@@ -748,11 +748,11 @@ void BinaryTreeDynET() {
 	// Print tree - Inorder 
 	Dyn_printTreeInorder(tree);
 	
-	// Print vector
-	Dyn_printIntVector(values, qty_nodes);
-	
 	// End time tree
 	float end_time_tree = time(NULL) - seconds;
+	
+	// Print vector
+	//Dyn_printIntVector(values, qty_nodes);
 	
 	// Time to print the sorted list with bubble sort
 	seconds = time(NULL);

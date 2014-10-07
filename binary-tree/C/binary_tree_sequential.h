@@ -584,7 +584,7 @@ void Sqt_debugTree(Node_Stc *tree) {
 void Sqt_printPreorder(Node_Stc *tree) {
 	
 	if( tree != NULL && tree->value != -1 ) {
-		printf("  %d  ", tree->value);
+		printf(" %d ", tree->value);
 	}
 	
 	if( tree->left != NULL) {
@@ -611,7 +611,7 @@ void Sqt_printInorder(Node_Stc *tree) {
 	}
 	
 	if( tree != NULL && tree->value != -1 ) {
-		printf("  %d  ", tree->value);
+		printf(" %d ", tree->value);
 	}
 	
 	if( tree->right != NULL) {
@@ -638,7 +638,7 @@ void Sqt_printPostorder(Node_Stc *tree) {
 	}
 	
 	if( tree != NULL && tree->value != -1 ) {
-		printf("  %d  ", tree->value);
+		printf(" %d ", tree->value);
 	}
 	
 }
@@ -789,6 +789,121 @@ void Sqt_swapNodeValues(Node_Stc *node_1, Node_Stc *node_2) {
 
 
 /**
+ * Add random values in vector
+ * @author Luiz Venturote
+ * @param int *vector Int Vector
+ * @param int qty quantity of nodes in the tree
+ * @return void
+ */
+void Sqt_addRandValuesInVector(int *vector, int qty) {
+	
+	int i=0;
+	
+	for(i=0; i<qty; i++) {
+		vector[i] = rand() % qty+qty;	
+	}
+	
+}
+
+
+/**
+ * Print int vector
+ * @author Luiz Venturote
+ * @param int *vector Int Vector
+ * @param int qty quantity of nodes in the tree
+ * @return void
+ */
+void Sqt_printIntVector(int *vector, int qty) {
+	
+	int i=0;
+	
+	printf("\n === Values of the int vector ================\n");
+	
+	for(i=0; i<qty; i++) {
+		printf(" %d ", vector[i]);
+	}
+	
+	printf("\n =============================================\n");
+		
+}
+
+
+/**
+ * Print results
+ * @author Luiz Venturote
+ * @param float time_1
+ * @param float time_2
+ * @return void
+ */
+void Sqt_printResults(float time_1, float time_2) {
+	
+	float result=0;
+	
+	// Results
+	printf("\n === Results =================================\n");
+	
+	printf("\n Tempo decorrido da arvore: %f", time_1);
+	printf("\n\n Tempo decorrido do bubble sort: %f", time_2);
+	
+	if(time_1 < time_2) {
+		
+		if(time_1 == 0) {
+			result = (time_2*100);
+			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);	
+		} else {
+			result = ((time_2/time_1)*100)-100;
+			printf("\n\n Arvore binaria e %3.2f%% mais rapida\n\n",  result);		
+		}
+		
+	} else {
+		
+		if(time_1 == time_2) {
+			printf("\n\n Sem diferenca no tempo de execucao\n\n");		
+		} else {
+			result = ((time_1/time_2)*100)-100;
+			printf("\n\n Bubble e %3.2f%% mais rapido\n\n",  result);
+		}
+		
+	}
+	
+	printf(" =============================================\n\n");
+	
+}
+
+
+/**
+ * Print tree inorder
+ * @author Luiz Venturote
+ * @param Node *tree Binary Tree
+ * @return void
+ */
+void Sqt_printTreeInorder(Node_Stc *tree) {
+	printf("\n === Tree Inorder ============================\n");
+	Sqt_printInorder(tree);
+	printf("\n =============================================\n");
+} 
+
+
+/**
+ * Adds nodes in the tree
+ * @author Luiz Venturote
+ * @param Node **tree Binary Tree
+ * @param int *vector Int Vector
+ * @param int qty quantity of nodes in the tree
+ * @return void
+ */
+void Sqt_addNodesInTheTree(Node_Stc *tree, int *vector, int qty) {
+	
+	int i=0;
+	
+	for(i=0; i<qty; i++) {
+		Sqt_addNode(tree, vector[i]);	
+	}
+	
+}
+
+
+/**
  * Initialize sequential binary tree representation
  * @author Luiz Venturote
  * @return void
@@ -851,5 +966,60 @@ void BinaryTreeSeq() {
 	printf(" Descending Order:");
 	Sqt_printDescendingOrder(tree);
 	printf("\n\n");
+	
+}
+
+/**
+ * Initialize sequential binary tree representation with executing time
+ * @author Luiz Venturote
+ * @return void
+ */
+void BinaryTreeSeqET() {
+	
+	// Initializes a new tree
+	Node_Stc tree[tree_size];
+	Sqt_initTree(tree);
+	
+	// Qty nodes
+	int qty_nodes = 100000;
+	
+	// Vector values
+	int values[qty_nodes];
+	
+	// Add random values in vector
+	Sqt_addRandValuesInVector(values, qty_nodes);
+	
+	// Print Vector
+	Sqt_printIntVector(values, qty_nodes);
+	
+	// Time to print the sorted list of nodes
+	time_t seconds = time(NULL);
+	
+	// Adds nodes in the tree
+	Sqt_addNodesInTheTree(&tree, values, qty_nodes);
+	
+	// Print tree - Inorder 
+	Sqt_printTreeInorder(tree);
+	
+	// End time tree
+	float end_time_tree = time(NULL) - seconds;
+	
+	// Print vector
+	//Sqt_printIntVector(values, qty_nodes);
+	
+	// Time to print the sorted list with bubble sort
+	seconds = time(NULL);
+	
+	// Ording vector
+	bubbleSort(values, qty_nodes);
+	
+	// Print vector
+	Sqt_printIntVector(values, qty_nodes);
+	
+	// End time bubble
+	float end_time_bubble = time(NULL) - seconds;
+	
+	// Print result
+	Sqt_printResults(end_time_tree, end_time_bubble);
 	
 }
