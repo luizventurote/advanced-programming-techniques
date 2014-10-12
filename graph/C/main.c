@@ -25,7 +25,7 @@ int main() {
 		switch(menu_opt) {
 			case 1:
 				displayHeader("Algoritmo de Kruskal");
-				Kruskal();
+				KruskalMST();
 				displayFooter();
 				break;
 			case 2:

@@ -1,127 +1,233 @@
-// Structure to represent a weighted edge in graph
-struct graph_edge {
-	int value;
-	int weight;
-} typedef Edge;
+#define MAX 20
 
-// Structure to represent a connected, undirected and weighted graph
-//struct graph {
-//    int V, E;
-//    Edge* edge;
-//} typedef Graph;
+// Structure to represent a edge in graph
+typedef struct edge {
+    int src;
+    int dest;
+    int weight;
+} Edge;
+
+// Structure to represent a edge list
+typedef struct edgelist {
+    Edge data[MAX];
+    int n;
+} EdgeList;
+
+// Main edge list
+EdgeList elist;
+
+// Main graph
+int Graph[MAX][MAX],n;
+
+// Minimum spanning tree
+EdgeList mst;
 
 /**
- * Creates a graph
+ * Kruskal’s algorithm
  * @author Luiz Venturote
- * @param  struct student hash_table Hash table
  */
-Edge ** createGraph(int lines, int columns) {
+void KruskalMST() {
+	
+	// Indexes
+    int i,j;
+    
+    // Amount of vertices
+    n = 8;
+
+	// Add adges
+	addEdge(0, 1, 3);
+	addEdge(0, 2, 1);
+	addEdge(1, 2, 7);
+	addEdge(1, 3, 2);
+	addEdge(1, 4, 6);
+	addEdge(2, 6, 3);
+	addEdge(2, 7, 2);
+	addEdge(3, 5, 7);
+	addEdge(3, 6, 5);
+	addEdge(4, 5, 2);
+	addEdge(5, 6, 1);
+	addEdge(6, 7, 9);
+
+	// Print main graph
+    printGraph(); 
+    
+    // Execute Kruskal's algorithm
+    Kruskal();
+    
+    // Print Results
+    printResult();
+    
+}
+
+
+/**
+ * Add new adge in the graph
+ * @author Luiz Venturote
+ * @param  int src Origin
+ * @param  int dest Destination
+ * @param  int weight Weight
+ */
+void addEdge(int src, int dest, int weight) {
+	
+	Graph[src][dest] = weight;
+	Graph[dest][src] = weight;
+	
+}
+
+
+/**
+ * Kruskal’s algorithm
+ * @author Luiz Venturote
+ */
+void Kruskal() {
+	
+	int markup_table[MAX];
+	
+	// Indexes
+    int i,j, b;
+    
+    int cno1,cno2;
+    
+    // Amount edges of the main edge list
+    elist.n=0;
+    
+    for(i=1;i<n;i++) {
+    
+        for(j=0;j<i;j++) {
+        	
+            if(Graph[i][j]!=0) {
+            	
+            	// Add values in main edge list
+                elist.data[elist.n].src	 	= 	i;
+                elist.data[elist.n].dest 	= 	j;
+                elist.data[elist.n].weight	=	Graph[i][j];
+                
+                elist.n++;
+                
+            }
+        }
+        
+    }
+
+	// Sort edge list
+    sort();            
+
+    mst.n=0;
+    
+    for(i=0;i<elist.n;i++) {
+    	
+    	// Search inside markup table
+        cno1 = search(markup_table, elist.data[i].src);
+        cno2 = search(markup_table, elist.data[i].dest);
+        
+//        printf("\n src: %d \t dest: %d \t cno1: %d \t cno2: %d\n", elist.data[i].src, elist.data[i].dest, cno1, cno2);
+        
+        if(cno1!=cno2) {
+        	
+            mst.data[mst.n] = elist.data[i];
+            
+            mst.n = mst.n+1;
+            
+            union1(markup_table,cno1,cno2);
+            
+        }
+        
+    }
+    
+    
+}
+
+
+/**
+ * Search inside markup table
+ * @author Luiz Venturote
+ * @param  int markup_table
+ * @param  int vertex
+ */
+int search(int markup_table[],int vertex) {
+	
+    return(markup_table[vertex]);
+    
+}
+
+
+/**
+ * Union
+ * @author Luiz Venturote
+ */
+void union1(int markup_table[],int c1,int c2) {
+    int i;
+    for(i=0;i<n;i++) {
+    	if(markup_table[i]==c2)
+    		markup_table[i]=c1;
+    }
+        
+}
+
+
+/**
+ * Sort
+ * @author Luiz Venturote
+ */
+void sort() {
+	
+    int i,j;
+    Edge temp;
+    
+    for(i=1;i<elist.n;i++) {
+    	
+    	for(j=0;j<elist.n-1;j++) {
+    		
+    		if(elist.data[j].weight>elist.data[j+1].weight) {
+                temp=elist.data[j];
+                elist.data[j]=elist.data[j+1];
+                elist.data[j+1]=temp;
+            }
+            
+    	}
+            
+    }
+        
+}
+
+
+/**
+ * Print result
+ * @author Luiz Venturote
+ */
+void printResult() {
+	
+    int i,cost=0;
+    
+    for(i=0;i<mst.n;i++) {
+    	
+        printf("\n src: %d\t dest: %d\t weight: %d",mst.data[i].src,mst.data[i].dest,mst.data[i].weight);
+        
+		cost=cost+mst.data[i].weight;
+        
+    }
+
+    printf("\n\nCost of the spanning tree=%d\n\n",cost);
+    
+}
+
+
+/**
+ * Print graph
+ * @author Luiz Venturote
+ */
+void printGraph() {
 	
 	int i=0, j=0;
-	
-	Edge ** graph = malloc( lines * sizeof(Edge*) );
-	
-	for(i=0; i<lines; ++i) {
-		graph[i] = malloc( columns * sizeof(Edge) );
-		
-		// Add neutral values in edge
-		for(j=0; j<columns; ++j) {
-			graph[i][j].value = 0;
-			graph[i][j].weight = 0;
-		}
-	}
-		
-    return graph;
-    
-}
-
-// Compare two edges according to their weights.
-// Used in qsort() for sorting an array of edges
-int myComp(const void* a, const void* b)
-{
-    struct Edge* a1 = (struct Edge*)a;
-    struct Edge* b1 = (struct Edge*)b;
-//    return a1.weight > b1.weight;
-}
- 
-
-
-// The main function to construct MST using Kruskal's algorithm
-int ** KruskalMST(Edge **graph, int lines, int columns) {
-
-	
-//	int ** graph_mst = malloc( lines * sizeof(int*) );
-	
-//    int V = graph->V;
-//    
-//    Edge result[V];  // Tnis will store the resultant MST
-//    
-//    int e = 0;  // An index variable, used for result[]
-//    int i = 0;  // An index variable, used for sorted edges
-//    int v=0;
-// 
-
-    // Step 1:  Sort all the edges in non-decreasing order of their weight
-    // If we are not allowed to change the given graph, we can create a copy of
-    // array of edges
-//    qsort(graph[0][0], lines*columns, sizeof(graph[0][0]), myComp);
- 
-    // Allocate memory for creating V ssubsets
-//    struct subset *subsets =
-//        (struct subset*) malloc( V * sizeof(struct subset) );
-// 
-//    // Create V subsets with single elements
-//    for (v = 0; v < V; ++v)
-//    {
-//        subsets[v].parent = v;
-//        subsets[v].rank = 0;
-//    }
-// 
-//    // Number of edges to be taken is equal to V-1
-//    while (e < V - 1)
-//    {
-//        // Step 2: Pick the smallest edge. And increment the index
-//        // for next iteration
-//        Edge next_edge = graph->edge[i++];
-// 
-//        int x = find(subsets, next_edge.src);
-//        int y = find(subsets, next_edge.dest);
-// 
-//        // If including this edge does't cause cycle, include it
-//        // in result and increment the index of result for next edge
-//        if (x != y)
-//        {
-//            result[e++] = next_edge;
-//            Union(subsets, x, y);
-//        }
-//        // Else discard the next_edge
-//    }
-// 
-//    // print the contents of result[] to display the built MST
-//    printf("Following are the edges in the constructed MST\n");
-//    for (i = 0; i < e; ++i)
-//        printf("%d -- %d == %d\n", result[i].src, result[i].dest,
-//                                                   result[i].weight);
-//    return;
-    
-    return NULL;
-    
-}
-
-void printGraph(Edge *graph [], int lines, int columns) {
-	
-	int i=0, j=0;
-	
-	Edge *graph_edge;
 	
 	printf("\n");
 	
-	for(i=0; i<lines; ++i) {
+	for(i=0; i<n; ++i) {
 		
 		// Graph index
 		if(i==0) {
 			
-			for(j=0; j<columns; ++j) {
+			for(j=0; j<n; ++j) {
 				
 				if(j==0)
 				printf("   | ");
@@ -132,21 +238,22 @@ void printGraph(Edge *graph [], int lines, int columns) {
 							
 			printf("\n");	
 			
-			for(j=0; j<columns; ++j)
+			for(j=0; j<n; ++j)
 				printf("------", j);
 				
 			printf("\n");	
 		}
 		
-		for(j=0; j<columns; ++j) {
+		for(j=0; j<n; ++j) {
+			
 			
 			if(j==0)
 				printf(" %d | ", i);
 			
-			if(graph[i][j].value == 0) {
+			if(Graph[i][j] == 0) {
 				printf("  -  ");
 			} else {
-				printf("  %d  ", graph[i][j].value);	
+				printf("  %d  ", Graph[i][j]);	
 			}
 			
 		}	
@@ -157,45 +264,4 @@ void printGraph(Edge *graph [], int lines, int columns) {
 	
 	printf("\n");
 	
-}
-
-
-void addEdge(Edge ** graph, int src, int dest, int weight) {
-	
-	graph[src][dest].value = 1;
-	graph[dest][src].value = 1;
-	graph[src][dest].weight = weight;
-	
-}
-
-
-void Kruskal() {
-
-	// Qty of vertices in graph
-    int vertices_qty = 6; 
-    
-    // Create graph
-    Edge **graph = createGraph(vertices_qty, vertices_qty);
- 
-    // add edge
-    addEdge(graph, 0, 1, 5);
-    addEdge(graph, 0, 2, 4);
-    addEdge(graph, 0, 4, 1);
-    addEdge(graph, 0, 5, 2);
-    
-    addEdge(graph, 1, 3, 2);
-    addEdge(graph, 1, 4, 2);
-    
-    addEdge(graph, 2, 3, 2);
-    addEdge(graph, 2, 4, 2);
-    addEdge(graph, 2, 5, 2);
-    
-    addEdge(graph, 3, 4, 2);
-    
-    // Print Graph
- 	printGraph(graph, vertices_qty, vertices_qty);
- 	
- 	// Kruskal algorithm to get minimum spanning tree
-    int **graph_mst = KruskalMST(graph, vertices_qty, vertices_qty);
-		
 }
