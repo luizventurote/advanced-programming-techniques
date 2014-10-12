@@ -13,6 +13,7 @@ int MenuOption() {
 	printf(" === Arvore Binaria =========================== \n");
 	printf(" 1) Algoritmo de Kruskal \n");
 	printf(" 2) Algoritmo Prim\n");
+	printf(" 3) Algoritmo de Dijkstra\n");
 	printf(" 0) Exit \n");
 	printf("\n Select option: ");
 	scanf("%d", &opt);

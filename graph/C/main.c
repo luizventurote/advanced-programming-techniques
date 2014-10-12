@@ -8,6 +8,7 @@
 #include "interface.h"
 #include "kruskal.h"
 #include "prim.h"
+#include "dijkstra.h"
 
 /**
  * Main
@@ -31,6 +32,11 @@ int main() {
 			case 2:
 				displayHeader("Algoritmo Prim");
 				Prim();
+				displayFooter();
+				break;
+			case 3:
+				displayHeader("Algoritmo de Dijkstra");
+				Dijkstra();
 				displayFooter();
 				break;
 			case 0:
