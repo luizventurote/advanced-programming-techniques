@@ -1,4 +1,4 @@
-#define MAX 20
+#define KRUSKAL_EDGES_QTY 7
 
 // Structure to represent a edge in graph
 typedef struct edge {
@@ -9,7 +9,7 @@ typedef struct edge {
 
 // Structure to represent a edge list
 typedef struct edgelist {
-    Edge data[MAX];
+    Edge data[KRUSKAL_EDGES_QTY];
     int n;
 } EdgeList;
 
@@ -17,7 +17,7 @@ typedef struct edgelist {
 EdgeList elist;
 
 // Main graph
-int Graph[MAX][MAX],n;
+int Graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY],n;
 
 // Minimum spanning tree
 EdgeList mst;
@@ -32,21 +32,28 @@ void KruskalMST() {
     int i,j;
     
     // Amount of vertices
-    n = 8;
+    n = 7;
 
 	// Add adges
-	addEdge(0, 1, 3);
-	addEdge(0, 2, 1);
-	addEdge(1, 2, 7);
-	addEdge(1, 3, 2);
-	addEdge(1, 4, 6);
-	addEdge(2, 6, 3);
-	addEdge(2, 7, 2);
-	addEdge(3, 5, 7);
-	addEdge(3, 6, 5);
-	addEdge(4, 5, 2);
-	addEdge(5, 6, 1);
-	addEdge(6, 7, 9);
+	addEdge(0, 1, 5);
+	addEdge(0, 2, 3);
+	addEdge(1, 0, 5);
+	addEdge(1, 2, 4);
+	addEdge(1, 3, 1);
+	addEdge(1, 4, 7);
+	addEdge(2, 1, 6);
+	addEdge(2, 3, 5);
+	addEdge(2, 5, 2);
+	addEdge(2, 4, 1);
+	addEdge(3, 4, 9);
+	addEdge(3, 6, 4);
+	addEdge(4, 3, 2);
+	addEdge(4, 5, 5);
+	addEdge(4, 6, 8);
+	addEdge(5, 2, 3);
+	addEdge(5, 4, 7);
+	addEdge(5, 6, 3);
+	addEdge(6, 4, 8);
 
 	// Print main graph
     printGraph(); 
@@ -70,7 +77,6 @@ void KruskalMST() {
 void addEdge(int src, int dest, int weight) {
 	
 	Graph[src][dest] = weight;
-	Graph[dest][src] = weight;
 	
 }
 
@@ -81,7 +87,7 @@ void addEdge(int src, int dest, int weight) {
  */
 void Kruskal() {
 	
-	int markup_table[MAX];
+	int markup_table[KRUSKAL_EDGES_QTY];
 	
 	// Indexes
     int i,j, b;

@@ -31,7 +31,7 @@ int main() {
 				break;
 			case 2:
 				displayHeader("Algoritmo Prim");
-				Prim();
+				PrimMST();
 				displayFooter();
 				break;
 			case 3:
