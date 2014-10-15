@@ -14,7 +14,7 @@ int minKey(int key[], int mstSet[]) {
    
    int v=0;
  
-	for (v = 0; v < PRIM_EDGES_QTY; v++) {
+	for (v=0; v<PRIM_EDGES_QTY; v++) {
 		
 		if (mstSet[v] == 0 && key[v] < min) {
 			min = key[v], min_index = v;	
@@ -61,9 +61,10 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 	int i = 0;
      
 	for (i=0; i<PRIM_EDGES_QTY; i++) {
-		key[i] = INT_MAX, mstSet[i] = 0;
+		parent[i] = 0;
+		key[i] = INT_MAX;
+		mstSet[i] = 0;
 	}
-        
 	// Always include first 1st vertex in MST.
 	key[0] = 0;     // Make key 0 so that this vertex is picked as first vertex
 	parent[0] = -1; // First node is always root of MST 
@@ -87,7 +88,10 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 			// mstSet[v] is false for vertices not yet included in MST
 			// Update the key only if graph[u][v] is smaller than key[v]
 			if (graph[u][v] && mstSet[v] == 0 && graph[u][v]<key[v]) {
-				parent[v]  = u, key[v] = graph[u][v];	
+				
+				parent[v]  = u;
+				key[v] = graph[u][v];
+			
 			}
 			
 		}
@@ -110,6 +114,7 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 void Prim_addEdge(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int src, int dest, int weight) {
 	
 	graph[src][dest] = weight;
+	graph[dest][src] = weight;
 	
 }
 
