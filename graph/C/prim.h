@@ -1,6 +1,49 @@
 // Number of vertices in the graph
 #define PRIM_EDGES_QTY 7 
  
+ 
+ /**
+ * Init graph
+ * @author Luiz Venturote
+ * @param  int graph
+ */
+void PrimMST() {
+	
+	int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY];
+	
+	// Init graph
+	Prim_initGraph(graph);
+   
+	// Add adges in graph 1
+	Prim_addEdge(graph, 0, 1, 5);
+	Prim_addEdge(graph, 0, 2, 3);
+	Prim_addEdge(graph, 1, 0, 5);
+	Prim_addEdge(graph, 1, 2, 4);
+	Prim_addEdge(graph, 1, 3, 1);
+	Prim_addEdge(graph, 1, 4, 7);
+	Prim_addEdge(graph, 2, 1, 6);
+	Prim_addEdge(graph, 2, 3, 5);
+	Prim_addEdge(graph, 2, 5, 2);
+	Prim_addEdge(graph, 2, 4, 1);
+	Prim_addEdge(graph, 3, 4, 9);
+	Prim_addEdge(graph, 3, 6, 4);
+	Prim_addEdge(graph, 4, 3, 2);
+	Prim_addEdge(graph, 4, 5, 5);
+	Prim_addEdge(graph, 4, 6, 8);
+	Prim_addEdge(graph, 5, 2, 3);
+	Prim_addEdge(graph, 5, 4, 7);
+	Prim_addEdge(graph, 5, 6, 3);
+	Prim_addEdge(graph, 6, 4, 8);
+	
+	// Print Graph
+	Prim_printGraph(graph);
+ 
+    // Print the solution
+    Prim(graph);
+    
+}
+
+
 /**
  * A utility function to find the vertex with minimum key value, from the set of vertices not yet included in MST
  * @author Luiz Venturote
@@ -192,46 +235,4 @@ void Prim_initGraph(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 		}
 
 	}
-}
-
-
-/**
- * Init graph
- * @author Luiz Venturote
- * @param  int graph
- */
-void PrimMST() {
-	
-	int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY];
-	
-	// Init graph
-	Prim_initGraph(graph);
-   
-	// Add adges in graph 1
-	Prim_addEdge(graph, 0, 1, 5);
-	Prim_addEdge(graph, 0, 2, 3);
-	Prim_addEdge(graph, 1, 0, 5);
-	Prim_addEdge(graph, 1, 2, 4);
-	Prim_addEdge(graph, 1, 3, 1);
-	Prim_addEdge(graph, 1, 4, 7);
-	Prim_addEdge(graph, 2, 1, 6);
-	Prim_addEdge(graph, 2, 3, 5);
-	Prim_addEdge(graph, 2, 5, 2);
-	Prim_addEdge(graph, 2, 4, 1);
-	Prim_addEdge(graph, 3, 4, 9);
-	Prim_addEdge(graph, 3, 6, 4);
-	Prim_addEdge(graph, 4, 3, 2);
-	Prim_addEdge(graph, 4, 5, 5);
-	Prim_addEdge(graph, 4, 6, 8);
-	Prim_addEdge(graph, 5, 2, 3);
-	Prim_addEdge(graph, 5, 4, 7);
-	Prim_addEdge(graph, 5, 6, 3);
-	Prim_addEdge(graph, 6, 4, 8);
-	
-	// Print Graph
-	Prim_printGraph(graph);
- 
-    // Print the solution
-    Prim(graph);
-    
 }

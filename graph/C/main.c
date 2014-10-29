@@ -25,17 +25,17 @@ int main() {
 		
 		switch(menu_opt) {
 			case 1:
-				displayHeader("Algoritmo de Kruskal");
+				displayHeader("Kruskal Algorithm");
 				KruskalMST();
 				displayFooter();
 				break;
 			case 2:
-				displayHeader("Algoritmo Prim");
+				displayHeader("Prim Algorithm");
 				PrimMST();
 				displayFooter();
 				break;
 			case 3:
-				displayHeader("Algoritmo de Dijkstra");
+				displayHeader("Dijkstra Algorithm");
 				Dijkstra();
 				displayFooter();
 				break;

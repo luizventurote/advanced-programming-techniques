@@ -1,4 +1,5 @@
 #define KRUSKAL_EDGES_QTY 7
+#define KRUSKAL_MAX_VALUE 999
 
 /**
  * Kruskal’s algorithm
@@ -81,7 +82,7 @@ void Kruskal_initGraph(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
 	for(i=0; i<KRUSKAL_EDGES_QTY; i++) {
 		
 		for(j=0; j<KRUSKAL_EDGES_QTY; j++) {	
-			graph[i][j] = 999;	
+			graph[i][j] = KRUSKAL_MAX_VALUE;	
 		}
 	}
 }
@@ -103,11 +104,11 @@ void Kruskal_addEdge(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY], int src, i
 /**
  * Kruskal’s algorithm - Root
  * @author Luiz Venturote
- * @param  int 
+ * @param  int v
  * @param  int p[]
  */
-int Kruskal_Root(int v,int p[]){
- 
+int Kruskal_Root(int v, int p[]) {
+  	
     while(p[v] != v) {
 		v = p[v];
 	}
@@ -124,11 +125,14 @@ int Kruskal_Root(int v,int p[]){
  * @param  int j
  * @param  int p[]
  */
-void Kruskal_Union(int i,int j,int p[]){
-    if(j > i)
-        p[j] = i;
-    else
-        p[i] = j;
+void Kruskal_Union(int i, int j, int p[]) {
+    
+	if(j>i) {
+		p[j] = i;	
+	} else {
+		p[i] = j;
+	}
+        
 }
 
 
@@ -137,54 +141,57 @@ void Kruskal_Union(int i,int j,int p[]){
  * @author Luiz Venturote
  * @param  int graph[][]
  */
-void Kruskal(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]){
+void Kruskal(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
 	
 	int n = KRUSKAL_EDGES_QTY;
 	
-    int count=0, i=0, p[100], min=0, j=0, u=0, v=0, k=0, t[100][100], sum=0;
-    
-    count = k = sum = 0;
+    int count=0, i=0, markup_table[100], min=0, j=0, line=0, column=0, k=0, mst_table[100][100], sum=0;
     
     for(i=0; i<n; i++) {
-        p[i] = i;
+        markup_table[i] = i;
     }
     
-    while(count < n) {
+    while(count<n) {
     	
-        min = 999;
+        min = KRUSKAL_MAX_VALUE;
         
+        // Gets the smallest value of the graph
         for(i=0; i<n; i++) {
         	
             for(j=0; j<n; j++) {
              
                 if(graph[i][j] < min) {
                     min = graph[i][j];
-                    u = i;
-                    v = j;
+                    line = i;
+                    column = j;
                 }
             }
         }
-        
-        if(min != 999) {
+                
+        if(min!=KRUSKAL_MAX_VALUE) {
         	
-            i = Kruskal_Root(u, p);
-            j = Kruskal_Root(v, p);
+        	// Checks if vertex has been marked to not generate cycles
+            i = Kruskal_Root(line, markup_table);
+            j = Kruskal_Root(column, markup_table);
             
-            if (i != j) {
-                t[k][0] = u;
-                t[k][1] = v;
+            // Checks if it is not equal, to not cause cycle
+            if(i!=j) {
+            	
+            	// Add the edge in to markup table
+                mst_table[k][0] = line;
+                mst_table[k][1] = column;
                  
                 k++;
                  
-                sum += min;
-                Kruskal_Union(i,j,p);
+                sum += min; // Add the cost of the way
+                
+                Kruskal_Union(i, j, markup_table);
             }
             
-        	graph[u][v] = graph[v][u] = 999;
+        	graph[line][column] = graph[column][line] = KRUSKAL_MAX_VALUE; // Reset vertex value
          
         }
-		
-		count +=1;
+		count ++;
     }
 	 
     if(count != n) {
@@ -196,10 +203,10 @@ void Kruskal(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]){
         printf(" Adges Spanning tree is: ");
         
         for(k=0; k<n-1; k++) {
-            printf(" %d -> %d ",t[k][0],t[k][1]);
+            printf(" %d->%d |", mst_table[k][0], mst_table[k][1]);
         }
         
-    printf("\n\n Cost: %d \n\n",sum);
+    	printf("\n\n Cost: %d \n\n", sum);
     
     }
     
@@ -245,7 +252,7 @@ void Kruskal_printGraph(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
 			if(j==0)
 				printf(" %d | ", i);
 			
-			if(graph[i][j] == 0 || graph[i][j] == 999) {
+			if(graph[i][j] == 0 || graph[i][j] == KRUSKAL_MAX_VALUE) {
 				printf("  -  ");
 			} else {
 				printf("  %d  ", graph[i][j]);	
