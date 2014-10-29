@@ -3,10 +3,9 @@
 #define PRIM_MAX_VALUE 999
  
  
- /**
- * Init graph
+/**
+ * Prim MST
  * @author Luiz Venturote
- * @param  int graph
  */
 void PrimMST() {
 	
