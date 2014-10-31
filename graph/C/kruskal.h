@@ -107,10 +107,10 @@ void Kruskal_addEdge(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY], int src,
  * @param  int v
  * @param  int p[]
  */
-int Kruskal_Root(int v, int p[]) {
+int Kruskal_Root(int v, int markup_table[]) {
   	
-    while(p[v] != v) {
-		v = p[v];
+    while(markup_table[v] != v) {
+		v = markup_table[v];
 	}
          
 	return v;
@@ -147,6 +147,7 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
 	
     int count=0, i=0, markup_table[100], min=0, j=0, line=0, column=0, k=0, mst_table[100][100], sum=0;
     
+    // Initialize markuop table
     for(i=0; i<n; i++) {
         markup_table[i] = i;
     }
@@ -174,7 +175,7 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
             i = Kruskal_Root(line, markup_table);
             j = Kruskal_Root(column, markup_table);
             
-            // Checks if it is not equal, to not cause cycle
+            // Checks if it is not equal, to not cause cycles
             if(i!=j) {
             	
             	// Add the edge in to markup table
@@ -191,14 +192,16 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
         	graph[line][column] = graph[column][line] = KRUSKAL_MAX_VALUE; // Reset vertex value
          
         }
+        
 		count ++;
+		
     }
 	 
-    if(count != n) {
+    if(count!=n) {
         printf(" Spanning tree not exist\n");
     }
     
-    if(count == n) {
+    if(count==n) {
     	
         printf(" Adges Spanning tree is: ");
         
