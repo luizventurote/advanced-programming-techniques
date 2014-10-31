@@ -1,4 +1,4 @@
-#define KRUSKAL_EDGES_QTY 7
+#define KRUSKAL_VERTEX_QTY 7
 #define KRUSKAL_MAX_VALUE 999
 
 /**
@@ -7,8 +7,8 @@
  */
 void KruskalMST() {
 	
-	int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY];
-	int graph_2[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY];
+	int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY];
+	int graph_2[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY];
 	
 	// Init graph
 	Kruskal_initGraph(graph);
@@ -75,13 +75,13 @@ void KruskalMST() {
  * @author Luiz Venturote
  * @param  int graph[][]
  */
-void Kruskal_initGraph(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
+void Kruskal_initGraph(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
 	
 	int i=0, j=0;
 	
-	for(i=0; i<KRUSKAL_EDGES_QTY; i++) {
+	for(i=0; i<KRUSKAL_VERTEX_QTY; i++) {
 		
-		for(j=0; j<KRUSKAL_EDGES_QTY; j++) {	
+		for(j=0; j<KRUSKAL_VERTEX_QTY; j++) {	
 			graph[i][j] = KRUSKAL_MAX_VALUE;	
 		}
 	}
@@ -96,7 +96,7 @@ void Kruskal_initGraph(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
  * @param  int dest Destination
  * @param  int weight Weight
  */
-void Kruskal_addEdge(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY], int src, int dest, int weight) {
+void Kruskal_addEdge(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY], int src, int dest, int weight) {
 	graph[src][dest] = weight;
 }
  
@@ -141,9 +141,9 @@ void Kruskal_Union(int i, int j, int p[]) {
  * @author Luiz Venturote
  * @param  int graph[][]
  */
-void Kruskal(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
+void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
 	
-	int n = KRUSKAL_EDGES_QTY;
+	int n = KRUSKAL_VERTEX_QTY;
 	
     int count=0, i=0, markup_table[100], min=0, j=0, line=0, column=0, k=0, mst_table[100][100], sum=0;
     
@@ -218,18 +218,18 @@ void Kruskal(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
  * @author Luiz Venturote
  * @param  int graph[][]
  */
-void Kruskal_printGraph(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
+void Kruskal_printGraph(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
 	
 	int i=0, j=0;
 	
 	printf("\n");
 	
-	for(i=0; i<KRUSKAL_EDGES_QTY; ++i) {
+	for(i=0; i<KRUSKAL_VERTEX_QTY; ++i) {
 		
 		// Graph index
 		if(i==0) {
 			
-			for(j=0; j<KRUSKAL_EDGES_QTY; ++j) {
+			for(j=0; j<KRUSKAL_VERTEX_QTY; ++j) {
 				
 				if(j==0)
 				printf("   | ");
@@ -240,13 +240,13 @@ void Kruskal_printGraph(int graph[KRUSKAL_EDGES_QTY][KRUSKAL_EDGES_QTY]) {
 							
 			printf("\n");	
 			
-			for(j=0; j<KRUSKAL_EDGES_QTY; ++j)
+			for(j=0; j<KRUSKAL_VERTEX_QTY; ++j)
 				printf("------", j);
 				
 			printf("\n");	
 		}
 		
-		for(j=0; j<KRUSKAL_EDGES_QTY; ++j) {
+		for(j=0; j<KRUSKAL_VERTEX_QTY; ++j) {
 			
 			
 			if(j==0)
