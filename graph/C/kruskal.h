@@ -102,12 +102,12 @@ void Kruskal_addEdge(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY], int src,
  
 
 /**
- * Kruskal’s algorithm - Root
+ * Kruskal’s algorithm - Check Marked
  * @author Luiz Venturote
  * @param  int v
  * @param  int p[]
  */
-int Kruskal_Root(int v, int markup_table[]) {
+int Kruskal_Check_Marked(int v, int markup_table[]) {
   	
     while(markup_table[v] != v) {
 		v = markup_table[v];
@@ -115,24 +115,6 @@ int Kruskal_Root(int v, int markup_table[]) {
          
 	return v;
 	
-}
-
-
-/**
- * Kruskal’s algorithm - Union
- * @author Luiz Venturote
- * @param  int i
- * @param  int j
- * @param  int p[]
- */
-void Kruskal_Union(int i, int j, int p[]) {
-    
-	if(j>i) {
-		p[j] = i;	
-	} else {
-		p[i] = j;
-	}
-        
 }
 
 
@@ -172,8 +154,8 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
         if(min!=KRUSKAL_MAX_VALUE) {
         	
         	// Checks if vertex has been marked to not generate cycles
-            i = Kruskal_Root(line, markup_table);
-            j = Kruskal_Root(column, markup_table);
+            i = Kruskal_Check_Marked(line, markup_table);
+            j = Kruskal_Check_Marked(column, markup_table);
             
             // Checks if it is not equal, to not cause cycles
             if(i!=j) {
@@ -186,7 +168,12 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
                  
                 sum += min; // Add the cost of the way
                 
-                Kruskal_Union(i, j, markup_table);
+                if(j>i) {
+					markup_table[j] = i;	
+				} else {
+					markup_table[i] = j;
+				}
+				
             }
             
         	graph[line][column] = graph[column][line] = KRUSKAL_MAX_VALUE; // Reset vertex value
@@ -211,8 +198,7 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
         
     	printf("\n\n Cost: %d \n\n", sum);
     
-    }
-    
+    }  
 }
 
 
