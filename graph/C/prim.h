@@ -1,10 +1,15 @@
 // Number of vertices in the graph
+// Número de vértices do grafo
 #define PRIM_EDGES_QTY 7 
+
+// Maximum value used in the Prim algorithm
+// Valor máximo utilizado no algoritmo de Prim
 #define PRIM_MAX_VALUE 999
  
  
 /**
  * Prim MST
+ *
  * @author Luiz Venturote
  */
 void PrimMST() {
@@ -12,9 +17,11 @@ void PrimMST() {
 	int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY];
 	
 	// Init graph
+	// Inicializa o grafo
 	Prim_initGraph(graph);
    
 	// Add adges in graph
+	// Adiciona arestas no grafo
 	Prim_addEdge(graph, 0, 1, 5);
 	Prim_addEdge(graph, 0, 2, 3);
 	Prim_addEdge(graph, 1, 0, 5);
@@ -35,10 +42,12 @@ void PrimMST() {
 	Prim_addEdge(graph, 5, 6, 3);
 	Prim_addEdge(graph, 6, 4, 8);
 	
-	// Print Graph
+	// Print graph
+	// Exibe o grafo
 	Prim_printGraph(graph);
  
-    // Print the solution
+    // Print the result
+    // Exibe o resultado
     Prim(graph);
     
 }
@@ -46,13 +55,14 @@ void PrimMST() {
 
 /**
  * A utility function to find the vertex with minimum key value, from the set of vertices not yet included in MST
+ * Função utilizada para encontrar o vértice com o valor mínimo que não estão incluídos na MST 
+ *
  * @author Luiz Venturote
  * @param  int key[]
  * @param  int mstSet[]
  */
-int minKey(int key[], int mstSet[]) {
+int Prim_minKey(int key[], int mstSet[]) {
 	
-   // Initialize min value
    int min=PRIM_MAX_VALUE, min_index=0, v=0;
  
 	for(v=0; v<PRIM_EDGES_QTY; v++) {
@@ -70,12 +80,14 @@ int minKey(int key[], int mstSet[]) {
 
 /**
  * A utility function to print the constructed MST stored in parent[]
+ * Função utilizada para mostrar na tela a contrução da MST amazenada no parent[]
+ *
  * @author Luiz Venturote
  * @param  int parent[]
  * @param  int n
  * @param  int graph[][]
  */
-int printMST(int parent[], int n, int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
+int Prim_printMST(int parent[], int n, int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 
 	int i=0;
 
@@ -83,12 +95,13 @@ int printMST(int parent[], int n, int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 	
 	for (i=1; i<PRIM_EDGES_QTY; i++) {
 		printf("%d - %d    %d \n", parent[i], i, graph[i][parent[i]]);
-	}
-      
+	}   
 }
  
 /**
  * Function to construct and print MST for a graph represented using adjacency matrix representation
+ * Função para contruir e exibir uma MST de um grafo representado por uma matriz de adjacência
+ *
  * @author Luiz Venturote
  * @param  int graph[][]
  */
@@ -114,7 +127,7 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 	for(count=0; count<n-1; count++) {
 		
 		// Pick the minimum key vertex from the set of vertices not yet included in MST
-        u = minKey(key, mstSet);
+        u = Prim_minKey(key, mstSet);
  
         // Add the picked vertex to the MST Set
         mstSet[u] = 1;
@@ -135,12 +148,14 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
      }
  
      // print the constructed MST
-     printMST(parent, n, graph);
+     Prim_printMST(parent, n, graph);
 }
 
 
 /**
  * Add new adge in the graph
+ * Adiciona uma nova aresta no grafo
+ *
  * @author Luiz Venturote
  * @param  int graph[][]
  * @param  int src Origin
@@ -157,6 +172,8 @@ void Prim_addEdge(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int src, int dest, 
 
 /**
  * Print graph
+ * Exibe o grafo
+ *
  * @author Luiz Venturote
  */
 void Prim_printGraph(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
@@ -212,6 +229,8 @@ void Prim_printGraph(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 
 /**
  * Init graph
+ * Inicia o grafo
+ *
  * @author Luiz Venturote
  * @param  int graph
  */
