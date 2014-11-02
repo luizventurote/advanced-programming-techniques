@@ -1,6 +1,6 @@
 // Number of vertices in the graph
 // Número de vértices do grafo
-#define KRUSKAL_VERTEX_QTY 7
+#define KRUSKAL_VERTEX_QTY 5
 
 // Maximum value used in the Kruskal algorithm
 // Valor máximo utilizado no algoritmo de Kruskal
@@ -13,34 +13,20 @@
 void KruskalMST() {
 	
 	int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY];
-	int graph_2[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY];
 	
 	// Init graph
 	// Inicializa o grafo
 	Kruskal_initGraph(graph);
-	Kruskal_initGraph(graph_2);
 
 	// Add adges in graph
 	// Adiciona arestas no grafo
-	Kruskal_addEdge(graph, 0, 1, 5);
-	Kruskal_addEdge(graph, 0, 2, 3);
-	Kruskal_addEdge(graph, 1, 0, 5);
-	Kruskal_addEdge(graph, 1, 2, 4);
-	Kruskal_addEdge(graph, 1, 3, 1);
-	Kruskal_addEdge(graph, 1, 4, 7);
-	Kruskal_addEdge(graph, 2, 1, 6);
-	Kruskal_addEdge(graph, 2, 3, 5);
-	Kruskal_addEdge(graph, 2, 5, 2);
-	Kruskal_addEdge(graph, 2, 4, 1);
-	Kruskal_addEdge(graph, 3, 4, 9);
-	Kruskal_addEdge(graph, 3, 6, 4);
-	Kruskal_addEdge(graph, 4, 3, 2);
-	Kruskal_addEdge(graph, 4, 5, 5);
-	Kruskal_addEdge(graph, 4, 6, 8);
-	Kruskal_addEdge(graph, 5, 2, 3);
-	Kruskal_addEdge(graph, 5, 4, 7);
-	Kruskal_addEdge(graph, 5, 6, 3);
-	Kruskal_addEdge(graph, 6, 4, 8);
+	Kruskal_addEdge(graph, 0, 1, 1);
+	Kruskal_addEdge(graph, 1, 2, 2);
+	Kruskal_addEdge(graph, 2, 3, 8);
+	Kruskal_addEdge(graph, 2, 4, 2);
+	Kruskal_addEdge(graph, 3, 0, 5);
+	Kruskal_addEdge(graph, 4, 1, 1);
+	
 
 	// Print graph
 	// Exibe o grafo
@@ -49,35 +35,6 @@ void KruskalMST() {
     // Print the result
     // Exibe o resultado
     Kruskal(graph);
-    
-    printf("\n\n -------------------- \n\n");
-    
-    // Add adges in graph
-	// Adiciona arestas no grafo
-	Kruskal_addEdge(graph_2, 0, 1, 5);
-	Kruskal_addEdge(graph_2, 0, 2, 1);
-	Kruskal_addEdge(graph_2, 1, 5, 1);
-	Kruskal_addEdge(graph_2, 1, 4, 1);
-	Kruskal_addEdge(graph_2, 1, 3, 7);
-	Kruskal_addEdge(graph_2, 2, 1, 2);
-	Kruskal_addEdge(graph_2, 2, 3, 6);
-	Kruskal_addEdge(graph_2, 2, 4, 7);
-	Kruskal_addEdge(graph_2, 3, 2, 7);
-	Kruskal_addEdge(graph_2, 3, 5, 4);
-	Kruskal_addEdge(graph_2, 3, 6, 6);
-	Kruskal_addEdge(graph_2, 4, 3, 3);
-	Kruskal_addEdge(graph_2, 4, 5, 5);
-	Kruskal_addEdge(graph_2, 4, 6, 9);
-	Kruskal_addEdge(graph_2, 5, 1, 7);
-	Kruskal_addEdge(graph_2, 5, 6, 2);
-	
-	// Print graph
-	// Exibe o grafo
-    Kruskal_printGraph(graph_2); 
-    
-    // Print the result
-    // Exibe o resultado
-    Kruskal(graph_2);
     
 }
 
@@ -182,7 +139,7 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
             i = Kruskal_Check_Marked(origin, markup_table);
             j = Kruskal_Check_Marked(dest, markup_table);
             
-            printf(" | i: %d | j: %d \n", i, j);
+            printf(" | i: %d | j: %d", i, j);
             
             // Checks if it is not equal to not cause cycles
             // Verifica se não é igual para não gerar ciclos
@@ -206,7 +163,16 @@ void Kruskal(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
 					markup_table[i] = j;
 				}
 				
+            } else {
+            	printf(" | Detected cycle!");
             }
+            
+            printf("\n");
+            
+            for(i=0; i<n; i++) {
+		    	printf(" [%d]=>%d", i, markup_table[i]);
+		    }
+		    printf("\n\n");
             
             // Remove vertex value in the graph
             // Remove o valor na grafo
