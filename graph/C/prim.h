@@ -1,6 +1,6 @@
 // Number of vertices in the graph
 // Número de vértices do grafo
-#define PRIM_EDGES_QTY 7 
+#define PRIM_EDGES_QTY 5
 
 // Maximum value used in the Prim algorithm
 // Valor máximo utilizado no algoritmo de Prim
@@ -21,26 +21,14 @@ void PrimMST() {
 	Prim_initGraph(graph);
    
 	// Add adges in graph
-	// Adiciona arestas no grafo
-	Prim_addEdge(graph, 0, 1, 5);
-	Prim_addEdge(graph, 0, 2, 3);
-	Prim_addEdge(graph, 1, 0, 5);
-	Prim_addEdge(graph, 1, 2, 4);
-	Prim_addEdge(graph, 1, 3, 1);
-	Prim_addEdge(graph, 1, 4, 7);
-	Prim_addEdge(graph, 2, 1, 6);
-	Prim_addEdge(graph, 2, 3, 5);
-	Prim_addEdge(graph, 2, 5, 2);
-	Prim_addEdge(graph, 2, 4, 1);
+	// Adiciona arestas no grafo	
+	Prim_addEdge(graph, 0, 1, 2);
+	Prim_addEdge(graph, 0, 3, 6);
+	Prim_addEdge(graph, 1, 2, 3);
+	Prim_addEdge(graph, 1, 3, 8);
+	Prim_addEdge(graph, 1, 4, 5);
+	Prim_addEdge(graph, 2, 4, 7);
 	Prim_addEdge(graph, 3, 4, 9);
-	Prim_addEdge(graph, 3, 6, 4);
-	Prim_addEdge(graph, 4, 3, 2);
-	Prim_addEdge(graph, 4, 5, 5);
-	Prim_addEdge(graph, 4, 6, 8);
-	Prim_addEdge(graph, 5, 2, 3);
-	Prim_addEdge(graph, 5, 4, 7);
-	Prim_addEdge(graph, 5, 6, 3);
-	Prim_addEdge(graph, 6, 4, 8);
 	
 	// Print graph
 	// Exibe o grafo
@@ -61,7 +49,7 @@ void PrimMST() {
  * @param  int key[]
  * @param  int mstSet[]
  */
-int Prim_minKey(int key[], int mstSet[]) {
+int Prim_minVertexValue(int key[], int mstSet[]) {
 	
    int min=PRIM_MAX_VALUE, min_index=0, v=0;
  
@@ -87,15 +75,17 @@ int Prim_minKey(int key[], int mstSet[]) {
  * @param  int n
  * @param  int graph[][]
  */
-int Prim_printMST(int parent[], int n, int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
+int Prim_printMST(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int mst[]) {
 
 	int i=0;
 
-	printf("Edge   Weight\n");
+	printf(" Edge   Weight\n");
 	
 	for (i=1; i<PRIM_EDGES_QTY; i++) {
-		printf("%d - %d    %d \n", parent[i], i, graph[i][parent[i]]);
+		printf(" %d - %d    %d \n", mst[i], i, graph[i][mst[i]]);
 	}   
+	
+	printf("\n");
 }
  
 /**
@@ -107,48 +97,86 @@ int Prim_printMST(int parent[], int n, int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]
  */
 void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 	
-	int i=0, n=PRIM_EDGES_QTY, count = 0, u=0, v=0;
+	int i=0, n=PRIM_EDGES_QTY, count=0, u=0, v=0, debug_print=0;
 	
-	int parent[n]; 	// Array to store constructed MST
-	int key[n];   	// Key values used to pick minimum weight edge in cut
-	int mstSet[n];  // To represent set of vertices not yet included in MST
+	int mst_table[n];
+	int weight_table[n];   	// Key values used to pick minimum weight edge in cut
+	int markup_table[n];  		// To represent set of vertices not yet included in MST
  
-	// Initialize all keys as INFINITE
-	for (i=0; i<n; i++) {
-		parent[i] = 0;		
-		mstSet[i] = 0;
-		key[i] 	  = PRIM_MAX_VALUE;
+	// Initialize vectors
+	// Inicializa os vetores
+	for(i=0; i<n; i++) {
+		mst_table[i] 	= 0;		
+		markup_table[i] 		= 0;
+		weight_table[i] = PRIM_MAX_VALUE;
 	}
 	
 	// Include first vertex in MST
-	key[0] 	  = 0;
-	parent[0] = -1;
+	// Inclui o primeiro vértice na MST
+	weight_table[0] = 0;
+	mst_table[0] 	= -1;
 	
 	for(count=0; count<n-1; count++) {
 		
 		// Pick the minimum key vertex from the set of vertices not yet included in MST
-        u = Prim_minKey(key, mstSet);
+		// Pega o vértice de chave mínima que não estão incluídos na MST
+		// Pega os vértices por ordem
+        u = Prim_minVertexValue(weight_table, markup_table);
  
         // Add the picked vertex to the MST Set
-        mstSet[u] = 1;
+        // Adicione o vértice escolhido para a MST
+        // Faz a marcação do vertice
+        markup_table[u] = 1;
  
         // Update key value and parent index of the adjacent vertices of the picked vertex. Consider only those vertices which are not yet included in MST
-		for(v=0; v<n; v++) {
-			
+		for(i=0; i<n; i++) {
+							
 			// graph[u][v] is non zero only for adjacent vertices of m
-			// mstSet[v] is false for vertices not yet included in MST
+			// markup_table[v] is false for vertices not yet included in MST
 			// Update the key only if graph[u][v] is smaller than key[v]
-			if(graph[u][v] && mstSet[v]==0 && graph[u][v]<key[v]) {
+			if(graph[u][i] && markup_table[i]==0 && graph[u][i]<weight_table[i]) {
 				
-				parent[v] = u;
-				key[v] 	  = graph[u][v];
+				mst_table[i] 	= u;
+				weight_table[i] = graph[u][i];
+				
+				debug_print = 1;
 			
-			}
+			} 
+			
+			printf(" count: %d | u: %d | i: %d | graph[u][i]: %d | markup_table[i]: %d | mst_table[i]: %d | weight_table[i]: %d", count, u, i, graph[u][i], markup_table[i], mst_table[i], weight_table[i]);
+			
+			if(debug_print == 1) {
+				printf(" | Add");	
+				debug_print = 0;
+			}	
+			
+			printf("\n");							
 		}
+		
+		printf("\n");
+		
      }
- 
+	
+	printf(" mst_table[] \n");
+	for(i=0; i<n; i++) {
+		printf(" [%d]=>%d", i, mst_table[i]);
+	}
+	printf("\n");
+	
+	printf("\n markup_table[] \n");
+	for(i=0; i<n; i++) {
+		printf(" [%d]=>%d", i, markup_table[i]);
+	}
+	printf("\n");
+	
+	printf("\n weight_table[] \n");
+	for(i=0; i<n; i++) {
+		printf(" [%d]=>%d", i, weight_table[i]);
+	}
+ 	printf("\n\n");
+ 	
      // print the constructed MST
-     Prim_printMST(parent, n, graph);
+     Prim_printMST(graph, mst_table);
 }
 
 
