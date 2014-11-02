@@ -62,7 +62,7 @@ void Kruskal_initGraph(int graph[KRUSKAL_VERTEX_QTY][KRUSKAL_VERTEX_QTY]) {
 }
 
 
- /**
+/**
  * Add new adge in the graph
  * Adiciona uma nova aresta no grafo
  *
