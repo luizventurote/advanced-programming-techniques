@@ -1,20 +1,23 @@
 // Number of vertices in the graph
+// Número de vértices do grafo
 #define DIJKSTRA_EDGES_QTY 7
+
+// Maximum value used in the Dijkstra algorithm
+// Valor máximo utilizado no algoritmo de Dijkstra
 #define DIJKSTRA_MAX_VALUE 999
 
 
 /**
  * Dijkstra
+ *
  * @author Luiz Venturote
  */
 void Dijkstra() {
 	
 	int graph[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY];
-	int graph_2[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY];
    
 	// Init graph
 	Dijkstra_initGraph(graph);
-	Dijkstra_initGraph(graph_2);
 	
 	// Add adges in graph 1
     Dijkstra_addEdge(graph, 0, 1, 5);
@@ -36,38 +39,12 @@ void Dijkstra() {
     Dijkstra_addEdge(graph, 5, 4, 7);
     Dijkstra_addEdge(graph, 5, 6, 3);
     Dijkstra_addEdge(graph, 6, 4, 8);
-    
-    // Add adges in graph 2
-    Dijkstra_addEdge(graph_2, 0, 1, 5);
-	Dijkstra_addEdge(graph_2, 0, 2, 1);
-	Dijkstra_addEdge(graph_2, 1, 3, 7);
-	Dijkstra_addEdge(graph_2, 1, 4, 1);
-	Dijkstra_addEdge(graph_2, 1, 5, 5);
-	Dijkstra_addEdge(graph_2, 2, 1, 2);
-	Dijkstra_addEdge(graph_2, 2, 3, 6);
-	Dijkstra_addEdge(graph_2, 2, 4, 7);
-	Dijkstra_addEdge(graph_2, 3, 2, 7);
-	Dijkstra_addEdge(graph_2, 3, 5, 4);
-	Dijkstra_addEdge(graph_2, 3, 6, 6);
-	Dijkstra_addEdge(graph_2, 4, 3, 3);
-	Dijkstra_addEdge(graph_2, 4, 5, 5);
-	Dijkstra_addEdge(graph_2, 4, 6, 9);
-	Dijkstra_addEdge(graph_2, 5, 1, 7);
-	Dijkstra_addEdge(graph_2, 5, 6, 2);
 	
 	// Print graph
 	Dijkstra_printGraph(graph);
 	
 	// Execute Dijkstra
     DijkstraMST(graph, 0);
-    
-    printf("\n\n\n\n\n");
-    
-    // Print graph
-	Dijkstra_printGraph(graph_2);
-	
-	// Execute Dijkstra
-    DijkstraMST(graph_2, 0);
     
     printf("\n\n");
     
@@ -76,11 +53,13 @@ void Dijkstra() {
 
 /**
  * A utility function to find the vertex with minimum distance value, from the set of vertices not yet included in shortest path tree
+ * Função utilizada para encontrar o vértice com distância mínima
+ *
  * @author Luiz Venturote
  * @param  int dist[]
  * @param  int sptSet[]
  */
-int minDistance(int dist[], int sptSet[]) {
+int Dijkstra_minDistance(int dist[], int sptSet[]) {
 	
 	// Initialize min value
 	int min=DIJKSTRA_MAX_VALUE, min_index=0, v=0;
@@ -99,11 +78,12 @@ int minDistance(int dist[], int sptSet[]) {
 
 /**
  * A utility function to print the constructed distance array
+ *
  * @author Luiz Venturote
  * @param  int dist[]
  * @param  int n
  */
-int printSolution(int dist[], int n) {
+int Dijkstra_printResult(int dist[]) {
 
 	int i=0;
 	
@@ -118,25 +98,25 @@ int printSolution(int dist[], int n) {
 
 /**
  * Funtion that implements Dijkstra's single source shortest path algorithm for a graph represented using adjacency matrix representation
+ *
  * @author Luiz Venturote
  * @param  int graph[][]
- * @param  int src
+ * @param  int src Origin point
  */
 void DijkstraMST(int graph[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY], int src) {
 	
-	// Indexes
-	int i=0, count=0, v=0, n=DIJKSTRA_EDGES_QTY;
+	int i=0, count=0, n=DIJKSTRA_EDGES_QTY, debug_print=0;
 	
 	// The output array.  dist[i] will hold the shortest - distance from src to i
 	int dist[n];    
  
-	// sptSet[i] will true if vertex i is included in shortest - path tree or shortest distance from src to i is finalized
-	int sptSet[n]; 
+	// markup_table[i] will true if vertex i is included in shortest - path tree or shortest distance from src to i is finalized
+	int markup_table[n]; 
  
-     // Initialize all distances as INFINITE and stpSet[] as false
+	// Initialize all distances as INFINITE and stpSet[] as false
 	for(i=0; i<n; i++) {
 		dist[i]   = DIJKSTRA_MAX_VALUE;
-		sptSet[i] = 0;	
+		markup_table[i] = 0;	
 	}
         
  	// Distance of source vertex from itself is always 0
@@ -147,30 +127,50 @@ void DijkstraMST(int graph[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY], int src) {
 		
 		// Pick the minimum distance vertex from the set of vertices not
 		// yet processed. u is always equal to src in first iteration.
-		int u = minDistance(dist, sptSet);
+		int u = Dijkstra_minDistance(dist, markup_table);
  
 		// Mark the picked vertex as processed
-		sptSet[u] = 1;
+		// Marca o vértice escolhido como processado
+		markup_table[u] = 1;
 		
 		// Update dist value of the adjacent vertices of the picked vertex.
-		for(v=0; v<n; v++) {
+		for(i=0; i<n; i++) {
 		
-			// Update dist[v] only if is not in sptSet, there is an edge from 
-			// u to v, and total weight of path from src to  v through u is 
-			// smaller than current value of dist[v]
-			if(!sptSet[v] && graph[u][v] && dist[u] != DIJKSTRA_MAX_VALUE && dist[u]+graph[u][v] < dist[v]) {
-				dist[v] = dist[u] + graph[u][v];
+			// Update dist[i] only if is not in markup_table, there is an edge from 
+			// u to i, and total weight of path from src to i through u is 
+			// smaller than current value of dist[i]
+			if(!markup_table[i] && graph[u][i] && dist[u]!=DIJKSTRA_MAX_VALUE && dist[u]+graph[u][i]<dist[i]) {
+				
+				dist[i] = dist[u] + graph[u][i];
+				
+				debug_print = 1;
+				
 			}
+			
+			printf(" count: %d | u: %d | i: %d | graph[u][i]: %d | markup_table[i]: %d | dist[u]: %d | dist[i]: %d", count, u, i, graph[u][i], markup_table[i], dist[u], dist[i]);
+			
+			if(debug_print == 1) {
+				printf(" | Add");	
+				debug_print = 0;
+			}	
+			
+			printf("\n");
         }
+        
+        printf("\n");
+        
      }
  
 	// print the constructed distance array
-	printSolution(dist, n);
+	Dijkstra_printResult(dist);
 
 }
 
-/**
+
+ /**
  * Add new adge in the graph
+ * Adiciona uma nova aresta no grafo
+ *
  * @author Luiz Venturote
  * @param  int graph[][]
  * @param  int src Origin
@@ -186,6 +186,8 @@ void Dijkstra_addEdge(int graph[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY], int src
 
 /**
  * Init graph
+ * Inicia o grafo
+ *
  * @author Luiz Venturote
  * @param  int graph[][]
  */
@@ -202,10 +204,12 @@ void Dijkstra_initGraph(int graph[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY]) {
 	}
 }
 
+
 /**
  * Print graph
+ * Exibe o grafo
+ *
  * @author Luiz Venturote
- * @param  int graph[][]
  */
 void Dijkstra_printGraph(int graph[DIJKSTRA_EDGES_QTY][DIJKSTRA_EDGES_QTY]) {
 	
