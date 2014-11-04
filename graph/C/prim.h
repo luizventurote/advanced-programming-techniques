@@ -1,6 +1,6 @@
 // Number of vertices in the graph
 // Número de vértices do grafo
-#define PRIM_EDGES_QTY 5
+#define PRIM_VERTEX_QTY 5
 
 // Maximum value used in the Prim algorithm
 // Valor máximo utilizado no algoritmo de Prim
@@ -14,7 +14,7 @@
  */
 void PrimMST() {
 	
-	int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY];
+	int graph[PRIM_VERTEX_QTY][PRIM_VERTEX_QTY];
 	
 	// Init graph
 	// Inicializa o grafo
@@ -43,20 +43,20 @@ void PrimMST() {
 
 /**
  * A utility function to find the vertex with minimum key value, from the set of vertices not yet included in MST
- * Função utilizada para encontrar o vértice com o valor mínimo que não estão incluídos na MST 
+ * Função utilizada para encontrar o vértice com o valor mínimo que não estão incluídos na MST para não gerar ciclos
  *
  * @author Luiz Venturote
- * @param  int key[]
- * @param  int mstSet[]
+ * @param  int weight_table[]
+ * @param  int markup_table[]
  */
-int Prim_minVertexValue(int key[], int mstSet[]) {
+int Prim_minVertexValue(int weight_table[], int markup_table[]) {
 	
    int min=PRIM_MAX_VALUE, min_index=0, v=0;
  
-	for(v=0; v<PRIM_EDGES_QTY; v++) {
+	for(v=0; v<PRIM_VERTEX_QTY; v++) {
 		
-		if (mstSet[v]==0 && key[v]<min) {
-			min 	  = key[v];
+		if(markup_table[v]==0 && weight_table[v]<min) {
+			min 	  = weight_table[v];
 			min_index = v;	
 		}	
 	}
@@ -67,21 +67,20 @@ int Prim_minVertexValue(int key[], int mstSet[]) {
 
 
 /**
- * A utility function to print the constructed MST stored in parent[]
- * Função utilizada para mostrar na tela a contrução da MST amazenada no parent[]
+ * A utility function to print the constructed MST
+ * Função utilizada para mostrar na tela a contrução da MST
  *
  * @author Luiz Venturote
- * @param  int parent[]
- * @param  int n
  * @param  int graph[][]
+ * @param  int mst[]
  */
-int Prim_printMST(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int mst[]) {
+int Prim_printMST(int graph[PRIM_VERTEX_QTY][PRIM_VERTEX_QTY], int mst[]) {
 
 	int i=0;
 
 	printf(" Edge   Weight\n");
 	
-	for (i=1; i<PRIM_EDGES_QTY; i++) {
+	for (i=1; i<PRIM_VERTEX_QTY; i++) {
 		printf(" %d - %d    %d \n", mst[i], i, graph[i][mst[i]]);
 	}   
 	
@@ -95,19 +94,19 @@ int Prim_printMST(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int mst[]) {
  * @author Luiz Venturote
  * @param  int graph[][]
  */
-void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
+void Prim(int graph[PRIM_VERTEX_QTY][PRIM_VERTEX_QTY]) {
 	
-	int i=0, n=PRIM_EDGES_QTY, count=0, u=0, v=0, debug_print=0;
+	int i=0, n=PRIM_VERTEX_QTY, count=0, u=0, v=0, debug_print=0;
 	
 	int mst_table[n];
-	int weight_table[n];   	// Key values used to pick minimum weight edge in cut
-	int markup_table[n];  		// To represent set of vertices not yet included in MST
+	int weight_table[n];
+	int markup_table[n];
  
 	// Initialize vectors
 	// Inicializa os vetores
 	for(i=0; i<n; i++) {
 		mst_table[i] 	= 0;		
-		markup_table[i] 		= 0;
+		markup_table[i] = 0;
 		weight_table[i] = PRIM_MAX_VALUE;
 	}
 	
@@ -119,21 +118,17 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 	for(count=0; count<n-1; count++) {
 		
 		// Pick the minimum key vertex from the set of vertices not yet included in MST
-		// Pega o vértice de chave mínima que não estão incluídos na MST
-		// Pega os vértices por ordem
+		// Pega os vértice de chave miníma que ainda foram marcados na MST para não gerar ciclos
         u = Prim_minVertexValue(weight_table, markup_table);
  
-        // Add the picked vertex to the MST Set
-        // Adicione o vértice escolhido para a MST
-        // Faz a marcação do vertice
+        // Add the picked vertex to the markup table
+        // Adiciona o vértice escolhido na tabela de marcação
         markup_table[u] = 1;
  
-        // Update key value and parent index of the adjacent vertices of the picked vertex. Consider only those vertices which are not yet included in MST
+        // Update edges weight. Consider only those vertices which are not yet included in MST
+		// Atualiza os pesos das arestras. Considerando somente os versos que ainda não estão incluídos na MST
 		for(i=0; i<n; i++) {
-							
-			// graph[u][v] is non zero only for adjacent vertices of m
-			// markup_table[v] is false for vertices not yet included in MST
-			// Update the key only if graph[u][v] is smaller than key[v]
+				
 			if(graph[u][i] && markup_table[i]==0 && graph[u][i]<weight_table[i]) {
 				
 				mst_table[i] 	= u;
@@ -143,10 +138,10 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
 			
 			} 
 			
-			printf(" count: %d | u: %d | i: %d | graph[u][i]: %d | markup_table[i]: %d | mst_table[i]: %d | weight_table[i]: %d", count, u, i, graph[u][i], markup_table[i], mst_table[i], weight_table[i]);
+			printf(" count: %d | u: %d | i: %d | graph[u][i]: %d | mst_table[i]: %d | markup_table[i]: %d | weight_table[i]: %d", count, u, i, graph[u][i], mst_table[i], markup_table[i], weight_table[i]);
 			
 			if(debug_print == 1) {
-				printf(" | Add");	
+				printf(" | Updated");	
 				debug_print = 0;
 			}	
 			
@@ -190,7 +185,7 @@ void Prim(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
  * @param  int dest Destination
  * @param  int weight Weight
  */
-void Prim_addEdge(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int src, int dest, int weight) {
+void Prim_addEdge(int graph[PRIM_VERTEX_QTY][PRIM_VERTEX_QTY], int src, int dest, int weight) {
 	
 	graph[src][dest] = weight;
 	graph[dest][src] = weight;
@@ -204,9 +199,9 @@ void Prim_addEdge(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY], int src, int dest, 
  *
  * @author Luiz Venturote
  */
-void Prim_printGraph(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
+void Prim_printGraph(int graph[PRIM_VERTEX_QTY][PRIM_VERTEX_QTY]) {
 	
-	int n=PRIM_EDGES_QTY, i=0, j=0;
+	int n=PRIM_VERTEX_QTY, i=0, j=0;
 	
 	printf("\n");
 	
@@ -262,13 +257,13 @@ void Prim_printGraph(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
  * @author Luiz Venturote
  * @param  int graph
  */
-void Prim_initGraph(int graph[PRIM_EDGES_QTY][PRIM_EDGES_QTY]) {
+void Prim_initGraph(int graph[PRIM_VERTEX_QTY][PRIM_VERTEX_QTY]) {
 	
 	int i=0, j=0;
 	
-	for(i=0; i<PRIM_EDGES_QTY; ++i) {
+	for(i=0; i<PRIM_VERTEX_QTY; ++i) {
 	
-		for(j=0; j<PRIM_EDGES_QTY; ++j) {
+		for(j=0; j<PRIM_VERTEX_QTY; ++j) {
 			graph[i][j] = 0;	
 		}
 
