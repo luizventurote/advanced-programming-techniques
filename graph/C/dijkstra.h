@@ -42,7 +42,7 @@ void Dijkstra() {
 
 
 /**
- * A utility function to find the vertex with minimum distance value, from the set of vertices not yet included in shortest path tree
+ * Function to find the vertex with minimum distance value
  * Função utilizada para encontrar o vértice com distância mínima
  *
  * @author Luiz Venturote
@@ -66,27 +66,29 @@ int Dijkstra_minDistance(int dist_table[], int markup_table[]) {
 
 
 /**
- * A utility function to print the constructed distance array
+ * Function to print the constructed distance array
+ * Função que exibe a construção da distância do vetor
  *
  * @author Luiz Venturote
  * @param  int dist[]
  * @param  int n
  */
-int Dijkstra_printResult(int dist[]) {
+int Dijkstra_printResult(int dist_table[]) {
 
 	int i=0;
 	
 	printf(" Vertex   Distance from Source\n");
 
 	for(i=0; i<DIJKSTRA_VERTEX_QTY; i++) {
-		printf(" %d \t\t %d\n", i, dist[i]);	
+		printf(" %d \t\t %d\n", i, dist_table[i]);	
 	}
       
 }
 
 
 /**
- * Funtion that implements Dijkstra's single source shortest path algorithm for a graph represented using adjacency matrix representation
+ * Funtion that implements Dijkstra algorithm
+ * Função que implementa o algoritmo de Dijkstra
  *
  * @author Luiz Venturote
  * @param  int graph[][]
@@ -110,23 +112,18 @@ void DijkstraMST(int graph[DIJKSTRA_VERTEX_QTY][DIJKSTRA_VERTEX_QTY], int src) {
  	// Distância do vértice de origem sempre vai ser 0
 	dist_table[src] = 0;
  	
-	// Find shortest path for all vertices
 	for(count=0; count<n-1; count++) {
 		
-		// Pick the minimum distance vertex from the set of vertices not
-		// yet processed. u is always equal to src in first iteration.
 		u = Dijkstra_minDistance(dist_table, markup_table);
  
 		// Mark the picked vertex as processed
 		// Marca o vértice escolhido como processado
 		markup_table[u] = 1;
 		
-		// Update dist value of the adjacent vertices of the picked vertex.
+		// Update dist value of the adjacent vertices
+		// Atualiza as distâncias dos vértices adjacentes
 		for(i=0; i<n; i++) {
 		
-			// Update dist[i] only if is not in markup_table, there is an edge from 
-			// u to i, and total weight of path from src to i through u is 
-			// smaller than current value of dist[i]
 			if(!markup_table[i] && graph[u][i] && dist_table[u]!=DIJKSTRA_MAX_VALUE && dist_table[u]+graph[u][i]<dist_table[i]) {
 				
 				dist_table[i] = dist_table[u] + graph[u][i];
@@ -162,7 +159,8 @@ void DijkstraMST(int graph[DIJKSTRA_VERTEX_QTY][DIJKSTRA_VERTEX_QTY], int src) {
 	printf("\n");
  	printf("\n\n");
  
-	// print the constructed distance array
+	// Print the constructed distance array
+	// Exibe o vetor de distâncias
 	Dijkstra_printResult(dist_table);
 
 }
@@ -179,9 +177,7 @@ void DijkstraMST(int graph[DIJKSTRA_VERTEX_QTY][DIJKSTRA_VERTEX_QTY], int src) {
  * @param  int weight Weight
  */
 void Dijkstra_addEdge(int graph[DIJKSTRA_VERTEX_QTY][DIJKSTRA_VERTEX_QTY], int src, int dest, int weight) {
-	
 	graph[src][dest] = weight;
-	
 }
 
 
@@ -201,7 +197,6 @@ void Dijkstra_initGraph(int graph[DIJKSTRA_VERTEX_QTY][DIJKSTRA_VERTEX_QTY]) {
 		for(j=0; j<DIJKSTRA_VERTEX_QTY; ++j) {
 			graph[i][j] = 0;	
 		}
-
 	}
 }
 
